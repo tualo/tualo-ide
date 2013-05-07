@@ -1,0 +1,46 @@
+{
+	"pleaseWaitTitle": "Please Wait ...",
+	"pleaseWait": "Please Wait ...",
+	"confirmCloseOfChangedFile": "The changes on *{1}* are not saved, do you realy want to close that file?",
+	"confirmCloseOfChangedFileTitle": "Close changed File",
+	
+	"addFileMenu": "new File",
+	"removeMenu": "Delete",
+	"addFolderMenu": "new Folder",
+	
+	"confirmDeleteOfFile": "Are you realy want delete {1}?",
+	"confirmDeleteOfFileTitle": "Delete a file",
+	
+	"confirmDeleteOfFolder": "Are you realy want delete {1}?",
+	"confirmDeleteOfFolderTitle": "Delete a folder",
+	
+	"promptAddOfFolder": "Enter the name of the new folder in {1}?",
+	"promptAddOfFolderTitle": "Add a folder",
+	
+	"promptAddOfFile": "Enter the name of the new file in {1}?",
+	"promptAddOfFileTitle": "Add a file",
+	
+	"buttonSave": "Save",
+	"buttonProcess": "Process",
+	
+	"standardOutputTitle": "Process Output",
+	"errorOutputTitle": "Process Errors",
+	"stopProcess": "stop running Process",
+	
+	"ProjectsTreeTitle": "configured Projects",
+	
+	"newDefaultProjectTitle": "New project",
+	"formProjectTitle": "Title",
+	"formProjectName": "Name",
+	"formProjectBasePath": "Path",
+	"formProjectProcessCommand": "Command",
+	"formProjectProcessCommandArgument": "Arguments",
+	"formProjectNameInvalid": "Only letters a-Z, numbers, dots and hyphens are allowed",
+	
+	"formProjectSaveNew": "Create",
+	"formProjectSaveBtn": "Save",
+	"formProjectSaveSuccessText": "The configuration has been saved",
+	"formProjectSaveSuccessTitle": "Project saved",
+	"formProjectSaveErrorText": "An error occured while saving",
+	"formProjectSaveErrorTitle": "Save-Error"
+}

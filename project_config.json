@@ -1,0 +1,30 @@
+[
+	{
+		"name": "ide",
+		"title": "IDE (Development)",
+		"basePath": "/Users/thomashoffmann/Documents/ide/",
+		"process": {
+			"cmd": "node",
+			"params": ["app.js"]
+		}
+	},
+	{
+		"name": "office",
+		"title": "tualo Office (IDE)",
+		"basePath": "/Users/thomashoffmann/Documents/office/",
+		"process": {
+			"cmd": "node",
+			"params": ["app.js"]
+		}
+	},
+	{
+		"name": "dev",
+		"title": "tualo Office (Development)",
+		"basePath": "/Users/thomashoffmann/localhost/dev/cmp/"
+	},
+	{
+		"name": "old.development",
+		"title": "tualo Office (old)",
+		"basePath": "/Users/thomashoffmann/localhost/old.development/cmp/"
+	}
+]

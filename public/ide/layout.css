@@ -1,0 +1,32 @@
+// Sample Text
+
+.cm-matchhighlight{
+	background-color: rgb(200,255,200);
+}
+
+.breakpoints {width: 10px;}
+.breakpoint { color: #2222ff; }
+
+.warnings {width: 10px;}
+.warning { color: #ff2222; }
+
+.x-tool-stop {
+	background-image: url(./svg/stop.svg) !important;
+}
+
+.x-tool-placeholder {
+    background-image: none !important;
+}
+
+/* Tooltip ExtJS 4.2 bug */
+.x-tip {
+	width: auto !important;
+}
+
+.x-tip-body {
+	width: auto !important;
+}
+
+.x-tip-body span {
+	width: auto !important;
+}
