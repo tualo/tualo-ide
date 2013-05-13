@@ -4,6 +4,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 	requires: [
 		'Ext.tualo.ide.components.ProjectTree',
 		'Ext.tualo.ide.components.IO',
+		'Ext.tualo.ide.components.GIT',
 		'Ext.tualo.ide.components.CodeMirror',
 		'Ext.tualo.ide.components.Process'
 	],
@@ -18,6 +19,18 @@ Ext.define('Ext.tualo.ide.components.Project', {
 	initComponent: function () {
 		var scope =this;
 		scope.files = [];
+		
+		
+		this.git = Ext.create('Ext.tualo.ide.components.GIT',{
+			projectID: scope.projectID,
+			dictionary: scope.dictionary,
+			listeners: {
+				scope: scope,
+				changed: function(fName){
+					
+				}
+			}
+		})
 		
 		this.io = Ext.create('Ext.tualo.ide.components.IO',{
 			projectID: scope.projectID,
@@ -163,6 +176,18 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				},
 				deleteOfFile: function(fileName){
 					scope.io.del(fileName);
+				},
+				gitStatus: function(fileName){
+					scope.git.status(fileName);
+				},
+				gitAdd: function(fileName){
+					scope.git.add(fileName);
+				},
+				gitIgnoreFile: function(fileName){
+					scope.git.ignore(fileName);
+				},
+				gitCommit: function(fileName){
+					scope.git.commit(fileName);
 				}
 			}
 		});
