@@ -10,6 +10,7 @@ Ext.define('Ext.tualo.ide.components.Process', {
 	}, 
 	initComponent: function () {
 		var scope = this;
+		/*
 		scope.layout = {
 			// layout-specific configs go here
 			type: 'accordion',
@@ -17,6 +18,8 @@ Ext.define('Ext.tualo.ide.components.Process', {
 			animate: true,
 			activeOnTop: true
 		};
+		*/
+		scope.layout = 'fit';
 		scope.socket = io.connect(window.location.href+'/process');
 		scope.socket.on('std',function(scope){
 			return function(data){
@@ -45,7 +48,7 @@ Ext.define('Ext.tualo.ide.components.Process', {
 					}
 			]
 		});
-		
+		/* removed, errors will be displayed red in a single output window
 		scope.err = Ext.create('Ext.panel.Panel',{
 			title: scope.dictionary.get("errorOutputTitle"),
 			html: '<div id="err-'+scope.divID+'" style="width:100%;height:100%;overflow:auto;"></div>',
@@ -61,7 +64,8 @@ Ext.define('Ext.tualo.ide.components.Process', {
 					}
 			]
 		});
-		scope.items = [ scope.std,scope.err ];
+		*/
+		scope.items = [ scope.std ];//,scope.err ];
 		scope.callParent(arguments);
 		
 	},
@@ -78,13 +82,13 @@ Ext.define('Ext.tualo.ide.components.Process', {
 	},
 	setErrOutput: function(txt,noAppend){
 		var scope =  this;
-		var el = window.document.getElementById('err-'+scope.divID);
+		var el = window.document.getElementById('std-'+scope.divID);
 		var html = el.innerHTML;
 		var output = [];
 		if (!noAppend){
 			output.push(html);
 		}
-		output.push(scope.formatConsoleText(txt));
+		output.push('<span style="color:red;">'+scope.formatConsoleText(txt)+'</span>');
 		el.innerHTML=output.join('<br/>');
 	},
 	formatConsoleText: function(txt){
