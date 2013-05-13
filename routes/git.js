@@ -18,7 +18,8 @@ var ignore = function(req, res, next) {
 	project.selectProject(req, res, next);
 	var fileID = req.body.file.substring(1);
 	res.json(200,{
-		success: true
+		success: true,
+		file: req.body.file
 	});
 }
 
@@ -27,6 +28,23 @@ var add = function(req, res, next) {
 	project.selectProject(req, res, next);
 	var fileID = req.body.file.substring(1);
 	var command = 'git add '+fileID;
+	child_process.exec(command,{
+		timeout: 30000,
+		cwd: res.locals.project.basePath
+	},function(err,stdout,stderr){
+		res.json(200,{
+			success: true,
+			file: req.body.file
+		});
+	})
+}
+
+
+var commit = function(req, res, next) {
+	project.selectProject(req, res, next);
+	var fileID = req.body.file.substring(1);
+	var message = req.body.message.replace(/\n/gm,' ').replace(/"/g,'*');
+	var command = 'git commit -m "'+message+'"';
 	console.log(path.join(res.locals.project.basePath,fileID));
 	console.log(command);
 	child_process.exec(command,{
@@ -35,26 +53,32 @@ var add = function(req, res, next) {
 	},function(err,stdout,stderr){
 		res.json(200,{
 			success: true,
-			msg: stdout,
-			p: parse(stdout)
+			file: req.body.file
 		});
 	})
 }
+
 
 var status = function(req, res, next) {
 	project.selectProject(req, res, next);
 	var fileID = req.body.file.substring(1);
 	var command = 'git status';
-	console.log(path.join(res.locals.project.basePath,fileID));
-	child_process.exec(command,{
-		timeout: 30000,
-		cwd: path.join(res.locals.project.basePath,fileID)
-	},function(err,stdout,stderr){
+	_status(res.locals.project.basePath,fileID,function(err,gitStatus){
 		res.json(200,{
 			success: true,
-			msg: stdout,
-			p: parse(stdout)
+			status: gitStatus
 		});
+	});
+}
+
+var _status = function(pathName,fileID,cb) {
+	var command = 'git status';
+	child_process.exec(command,{
+		timeout: 30000,
+		cwd: path.join(path,fileID)
+	},function(err,stdout,stderr){
+		var p = parse(stdout);
+		cb(err,p);
 	})
 }
 
@@ -101,7 +125,10 @@ var parse = function(str){
 						});
 						break;
 					case 'untracked':
-						result.untracked.push(fileState);
+						result.untracked.push({
+							state: 'untracked',
+							file: fileState
+						});
 						break;
 				}
 			}
@@ -109,9 +136,10 @@ var parse = function(str){
 	}
 	return result;
 }
-
+exports.status = _status;
 exports.initRoute=function(app){
 	app.post("/:project/git/status",status);
 	app.post("/:project/git/ignore",ignore);
 	app.post("/:project/git/add",add);
+	app.post("/:project/git/commit",commit);
 }

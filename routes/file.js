@@ -8,6 +8,7 @@
 var fs = require('fs');
 var config = require('../config/server').config;
 var project = require('./project');
+var git = require('./git');
 var jsDiff = require('diff');
 
 var open = function(req, res, next) {
@@ -291,6 +292,15 @@ var getType = function(filename){
 	}
 	return type;
 }
+
+var inFileArray = function(gitStatusA,file){
+	for(var i in gitStatusA){
+		if (gitStatusA[i].file==file){
+			return true;
+		}
+	}
+	return false;
+}
 var list = function(req, res, next)  {
 	project.selectProject(req, res, next);
 	var pathID = req.body.path;
@@ -298,53 +308,60 @@ var list = function(req, res, next)  {
 		pathID='';
 	}
 	if (typeof res.locals.project!=='undefined'){
-		fs.readdir(res.locals.project.basePath+pathID,function(err,files){
-			if (err){
-				res.json(200,{
-					success: false,
-					path: res.locals.project.basePath+pathID,
-					msg: err.message,
-					data: err
-				});
-				return;
-			}
-			
-			var output_folders = [];
-			var output_files = [];
-			var output = [];
-			for(var i in files){
+		git.status(res.locals.project.basePath,'',function(err,gitStatus){
+			fs.readdir(res.locals.project.basePath+pathID,function(err,files){
+				if (err){
+					res.json(200,{
+						success: false,
+						path: res.locals.project.basePath+pathID,
+						msg: err.message,
+						data: err
+					});
+					return;
+				}
 				
-				if (files[i].substring(0,1)!='.'){ // don't show hidden files
-					var stats = fs.lstatSync(res.locals.project.basePath+pathID+'/'+files[i]);
-					//var strClass = 'unkownfile';
-					var entry = {
-						id: pathID+'/'+files[i],
-						label: files[i],
-						text: files[i],
-						type: 'unkownfile',
-						leaf: true
-					}
-					if (stats.isDirectory()) {
-						entry.type = 'folder';
-						entry.leaf =  false;
-					}else{
-						entry.type =getType(files[i]);
-					}
-					if (entry.type==='folder'){
-						output_folders.push(entry);
-					}else{
-						output_files.push(entry);
+				var output_folders = [];
+				var output_files = [];
+				var output = [];
+				for(var i in files){
+					
+					if (files[i].substring(0,1)!='.'){ // don't show hidden files
+						var stats = fs.lstatSync(res.locals.project.basePath+pathID+'/'+files[i]);
+						//var strClass = 'unkownfile';
+						var entry = {
+							id: pathID+'/'+files[i],
+							label: files[i],
+							text: files[i],
+							type: 'unkownfile',
+							leaf: true
+						}
+						if (stats.isDirectory()) {
+							entry.type = 'folder';
+							entry.leaf =  false;
+						}else{
+							entry.type =getType(files[i]);
+						}
+						
+						entry.git_staged = inFileArray(gitStatus.staged,pathID.substring(1)+'/'+files[i]);
+						entry.git_notstaged = inFileArray(gitStatus.notstaged,pathID.substring(1)+'/'+files[i]);
+						entry.git_untracked = inFileArray(gitStatus.untracked,pathID.substring(1)+'/'+files[i]);
+						
+						if (entry.type==='folder'){
+							output_folders.push(entry);
+						}else{
+							output_files.push(entry);
+						}
 					}
 				}
-			}
-			for(var i in output_folders){
-				output.push(output_folders[i]);
-			}
-			for(var i in output_files){
-				output.push(output_files[i]);
-			}
-			
-			res.json(200,output);
+				for(var i in output_folders){
+					output.push(output_folders[i]);
+				}
+				for(var i in output_files){
+					output.push(output_files[i]);
+				}
+				
+				res.json(200,output);
+			});
 		});
 	}else{
 		res.json(200,{success:false,msg:'there is no cookie set'});

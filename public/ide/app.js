@@ -8,6 +8,7 @@ Ext.application({
 	require: ['Ext.tualo.ide.components.Project','Ext.tualo.ide.language.Dictionary'],
 	launch: function() {
 		Ext.setGlyphFontFamily('FontAwesome');
+		Ext.MessageBox.minPromptWidth = 400;
 		Ext.tip.QuickTipManager.init();
 		Ext.create('Ext.tualo.ide.language.Dictionary', {
 			loadLanguage: window.navigator.language,

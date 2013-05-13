@@ -42,5 +42,19 @@
 	"formProjectSaveSuccessText": "The configuration has been saved",
 	"formProjectSaveSuccessTitle": "Project saved",
 	"formProjectSaveErrorText": "An error occured while saving",
-	"formProjectSaveErrorTitle": "Save-Error"
+	"formProjectSaveErrorTitle": "Save-Error",
+	
+	
+	"gitMenu": "Git",
+	"gitStatus": "Status",
+	"gitAdd": "Add",
+	"gitIgnore": "Ignore",
+	"gitException": "Exception",
+	"gitNoResponse": "The server did not send any response",
+	
+	"git.prompt.commitTitle": "Git commit",
+	"git.prompt.commitQuestion": "Enter the commit Message for {1}.",
+	"git.Information": "Information",
+	"git.commiting_not_staged": "The file is not staged, please add them first",
+	"git.menu.commit": "Commit"
 }
