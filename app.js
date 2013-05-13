@@ -6,7 +6,7 @@
  *  
  */ 
 
-var routes = ['project','sign','ui','file','syntax','process','syntax'];
+var routes = ['project','sign','ui','file','syntax','process','git'];
 
 var express = require('express');
 var config = require('./config/server').config;
