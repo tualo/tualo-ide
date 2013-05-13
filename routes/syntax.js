@@ -27,6 +27,9 @@ var project = require('./project');
 var UglifyJS = require("uglify-js");
 var child_process = require('child_process');
 
+/**
+* uses uglify js beautify function
+*/
 var beautify = function(req, res, next){
 	project.selectProject(req, res, next);
 	var fileID = req.body.file;
