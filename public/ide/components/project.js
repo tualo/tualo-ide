@@ -27,7 +27,14 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			listeners: {
 				scope: scope,
 				changed: function(fName){
-					
+					console.log(fName);
+					var scope =this;
+					var root = scope.tree.treePanel.getRootNode();
+					var ch = root.findChild('id',fName,true);
+					 
+					if (ch){
+						scope.tree.treePanel.getStore().load(ch.parentNode);
+					}
 				}
 			}
 		})

@@ -30,6 +30,15 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 			}, {
 				name: 'type',
 				type: 'string'
+			}, {
+				name: 'git_staged',
+				type: 'boolean'
+			}, {
+				name: 'git_notstaged',
+				type: 'boolean'
+			}, {
+				name: 'git_untracked',
+				type: 'boolean'
 			}]
 		});
 		
@@ -46,6 +55,7 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 						var fileName =sel.get('id');
 						var type = sel.get('type');
 						if (type==='folder'){ // can only add files/folder to a folder
+							
 							Ext.MessageBox.prompt(
 								scope.dictionary.get('promptAddOfFileTitle'),
 								scope.dictionary.get('promptAddOfFile',shortFileName),
@@ -125,6 +135,80 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 						}
 					}
 				}
+			},'-',{
+				text: scope.dictionary.get('gitMenu'),
+				menu: [
+					{
+						text: scope.dictionary.get('gitStatus'),
+						scope: scope,
+						handler: function(){
+							var scope = this;
+							var sel = scope.treePanel.getSelectionModel().getSelection();
+							if (sel.length===1){
+								sel=sel[0];
+								var shortFileName =sel.get('text');
+								var fileName =sel.get('id');
+								var type = sel.get('type');
+								scope.fireEvent('gitStatus',fileName);
+							}
+						}
+					},
+					{
+						text: scope.dictionary.get('gitAdd'),
+						scope: scope,
+						handler: function(){
+							var scope = this;
+							var sel = scope.treePanel.getSelectionModel().getSelection();
+							if (sel.length===1){
+								sel=sel[0];
+								var shortFileName =sel.get('text');
+								var fileName =sel.get('id');
+								var type = sel.get('type');
+								scope.fireEvent('gitAdd',fileName);
+							}
+						}
+					},
+					{
+						text: scope.dictionary.get('git.menu.commit'),
+						scope: scope,
+						handler: function(){
+							var scope = this;
+							var sel = scope.treePanel.getSelectionModel().getSelection();
+							if (sel.length===1){
+								sel=sel[0];
+								var shortFileName =sel.get('text');
+								var fileName =sel.get('id');
+								var type = sel.get('type');
+								console.log(sel);
+								if (sel.get('git_staged')===true){
+									scope.fireEvent('gitCommit',fileName);
+								}else{
+									Ext.MessageBox.show({
+										title: scope.dictionary.get('git.Information'),
+										msg: scope.dictionary.get('git.commiting_not_staged'),
+										icon: Ext.MessageBox.INFO,
+										buttons: Ext.MessageBox.OK
+									});
+								}
+							}
+						}
+					},'-',
+					{
+						text: scope.dictionary.get('gitIgnore'),
+						scope: scope,
+						handler: function(){
+							var scope = this;
+							var sel = scope.treePanel.getSelectionModel().getSelection();
+							if (sel.length===1){
+								sel=sel[0];
+								var shortFileName =sel.get('text');
+								var fileName =sel.get('id');
+								var type = sel.get('type');
+								scope.fireEvent('gitIgnoreFile',fileName);
+							}
+						}
+					}
+				]
 			}]
 		});
 		
@@ -206,7 +290,27 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 					e.stopEvent();
 					return false;
 				}
-			}
+			},
+			columns: [
+				{
+					xtype : 'treecolumn',
+					dataIndex : 'text',
+					flex: 1,
+					renderer : function(value,meta, record){
+						var style='color:#000;';
+						if (record.get('git_staged')===true){
+							style='color:rgb(0,0,190);';
+						}
+						if (record.get('git_untracked')===true){
+							style='color:rgb(0,190,0);';
+						}
+						if (record.get('git_notstaged')===true){
+							style='color:rgb(190,190,0);';
+						}
+						return '<span style="'+style+'">'+value+'</span>';
+					}
+				}
+			]
 		});
 		scope.items = [scope.treePanel];
 		scope.callParent(arguments);
