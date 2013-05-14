@@ -30,3 +30,19 @@
 .x-tip-body span {
 	width: auto !important;
 }
+
+.tree-git-notstaged{
+	color:rgb(190,190,0);
+}
+
+.tree-git-staged{
+	color:rgb(0,0,190);
+}
+
+.tree-git-untracked{
+	color:rgb(0,190,0);
+}
+
+.tree-git-ignored{
+	color:rgb(150,150,150);
+}

@@ -344,6 +344,7 @@ var list = function(req, res, next)  {
 						}
 						
 						var _fname = path.join(pathID.substring(1),files[i]);
+						entry.git_ignored = inFileArray(gitStatus.ignored,_fname);
 						entry.git_staged = inFileArray(gitStatus.staged,_fname);
 						entry.git_notstaged = inFileArray(gitStatus.notstaged,_fname);
 						entry.git_untracked = inFileArray(gitStatus.untracked,_fname);

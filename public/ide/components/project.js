@@ -221,6 +221,9 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				},
 				gitPush: function(fileName){
 					scope.git.push(fileName);
+				},
+				gitTag: function(fileName){
+					scope.git.tag(fileName);
 				}
 			}
 		});

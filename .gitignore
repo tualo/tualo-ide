@@ -2,3 +2,4 @@
 /macos
 /doc
 .DS_Store
+routes/to_ignore.js

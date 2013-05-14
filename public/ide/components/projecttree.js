@@ -62,6 +62,9 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 			}, {
 				name: 'git_untracked',
 				type: 'boolean'
+			}, {
+				name: 'git_ignored',
+				type: 'boolean'
 			}]
 		});
 		
@@ -202,8 +205,8 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 								var shortFileName =sel.get('text');
 								var fileName =sel.get('id');
 								var type = sel.get('type');
-								console.log(sel);
-								if (sel.get('git_staged')===true){
+								 
+								if ((sel.get('git_staged')===true)||(type==='folder')){ // always allow to commit folders
 									scope.fireEvent('gitCommit',fileName);
 								}else{
 									Ext.MessageBox.show({
@@ -216,6 +219,21 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 							}
 						}
 					},'-',
+					{
+						text: scope.dictionary.get('git.menu.tag'),
+						scope: scope,
+						handler: function(){
+							var scope = this;
+							var sel = scope.treePanel.getSelectionModel().getSelection();
+							if (sel.length===1){
+								sel=sel[0];
+								var shortFileName =sel.get('text');
+								var fileName =sel.get('id');
+								var type = sel.get('type');
+								scope.fireEvent('gitTag',fileName);
+							}
+						}
+					},
 					{
 						text: scope.dictionary.get('gitPush'),
 						scope: scope,
@@ -339,17 +357,20 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 					dataIndex : 'text',
 					flex: 1,
 					renderer : function(value,meta, record){
-						var style='color:#000;';
+						var class_name='';
 						if (record.get('git_staged')===true){
-							style='color:rgb(0,0,190);';
+							class_name='tree-git-staged';
 						}
 						if (record.get('git_untracked')===true){
-							style='color:rgb(0,190,0);';
+							class_name='tree-git-untracked';
 						}
 						if (record.get('git_notstaged')===true){
-							style='color:rgb(190,190,0);';
+							class_name='tree-git-notstaged';
 						}
-						return '<span style="'+style+'">'+value+'</span>';
+						if (record.get('git_ignored')===true){
+							class_name='tree-git-ignored';
+						}
+						return '<span class="'+class_name+'">'+value+'</span>';
 					}
 				}
 			]

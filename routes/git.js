@@ -5,22 +5,44 @@
  *
  * Description (DE):
  * 
- * Die GIT Route kann genutzt werden, um git-repos anzuzeigen
+ * Die GIT Route.
  */
 
 var child_process = require('child_process');
 var path = require('path');
+var fs = require('fs');
 var project = require('./project');
 
 
 
 var ignore = function(req, res, next) {
 	project.selectProject(req, res, next);
-	var fileID = req.body.file.substring(1);
-	res.json(200,{
-		success: true,
-		file: req.body.file
+	var fileID = req.body.file;
+	fs.readFile(path.join(res.locals.project.basePath,'.gitignore'), function (err, data) {
+		if (err){
+			res.json(200,{
+				success: false,
+				msg: err.message
+			});
+			return;
+		}
+		data+="\n";
+		data+=fileID;
+		fs.writeFile(path.join(res.locals.project.basePath,'.gitignore'), data, [], function (err) {
+			if (err){
+				res.json(200,{
+					success: false,
+					msg: err.message
+				});
+				return;
+			}
+			res.json(200,{
+				success: true,
+				file: req.body.file
+			});
+		});
 	});
+	
 }
 
 var push = function(req, res, next) {
@@ -42,8 +64,9 @@ var push = function(req, res, next) {
 
 var add = function(req, res, next) {
 	project.selectProject(req, res, next);
-	var fileID = req.body.file.substring(1);
-	var command = 'git add '+fileID;
+	var fileID = req.body.file;
+	
+	var command = 'git add .'+fileID;
 	child_process.exec(command,{
 		timeout: 30000,
 		cwd: res.locals.project.basePath
@@ -56,13 +79,30 @@ var add = function(req, res, next) {
 }
 
 
+
 var commit = function(req, res, next) {
 	project.selectProject(req, res, next);
 	var fileID = req.body.file.substring(1);
 	var message = req.body.message.replace(/\n/gm,' ').replace(/"/g,'*');
 	var command = 'git commit -m "'+message+'"';
-	console.log(path.join(res.locals.project.basePath,fileID));
-	console.log(command);
+	 
+	child_process.exec(command,{
+		timeout: 30000,
+		cwd: res.locals.project.basePath
+	},function(err,stdout,stderr){
+		res.json(200,{
+			success: true,
+			file: req.body.file
+		});
+	})
+}
+
+var tag = function(req, res, next) {
+	project.selectProject(req, res, next);
+	var fileID = req.body.file.substring(1);
+	var tag = req.body.tag.replace(/\n/gm,' ').replace(/"/g,'*').replace(/\s/g,'-');
+	var command = 'git tag -a '+tag+' ';
+	
 	child_process.exec(command,{
 		timeout: 30000,
 		cwd: res.locals.project.basePath
@@ -87,6 +127,16 @@ var status = function(req, res, next) {
 	});
 }
 
+
+var _ignored = function(pathName,cb){
+	fs.readFile(path.join(pathName,'.gitignore'), function (err, data) {
+		if (err){
+			cb(err,null);
+		}
+		var f = (data+'').split("\n");
+		cb(null,f);
+	});
+}
 var _status = function(pathName,fileID,cb) {
 	var command = 'git status';
 	child_process.exec(command,{
@@ -94,7 +144,17 @@ var _status = function(pathName,fileID,cb) {
 		cwd: path.join(path,fileID)
 	},function(err,stdout,stderr){
 		var p = parse(stdout);
-		cb(err,p);
+		_ignored(pathName,function(err,ignored){
+			p.ignored=[];
+			for(var i in ignored){
+				p.ignored.push({
+					state: 'ignored',
+					file: ignored[i]
+				})
+			}
+			cb(err,p);
+		})
+		
 	})
 }
 
