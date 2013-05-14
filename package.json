@@ -21,6 +21,7 @@
 		"diff": ">=1.0.4",
 		"uglify-js": ">=2.2.5",
 		"socket.io": ">=0.9.14",
-		"socket.io-client": ">=0.9.11"
+		"socket.io-client": ">=0.9.11",
+		"path-extra": ">=0.1.0"
 	}
 }
