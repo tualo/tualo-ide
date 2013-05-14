@@ -7,6 +7,36 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 		this.projectTitle = config.projectTitle;
 		this.callParent([ config ]);
 	},
+	inRestoreExpanded: function(id,point){
+		if (typeof point==='undefined'){
+			point = this._restore;
+		}
+		if (typeof point!=='undefined'){
+			if (typeof point.id!=='undefined'){
+				if (point.id===id){
+					return point.expanded;
+				}
+				if (typeof point.childs!=='undefined'){
+					var res=false;
+					for(var i in point.childs){
+						res|=this.inRestoreExpanded(id,point.childs[i]);
+					}
+					return res;
+				}
+			}
+		}
+		return false;
+	},
+	restore: function(obj){
+		this._restore=obj;
+		this._restoreLoad=true;
+		/*
+		console.log(obj);
+		this.treePanel.getStore().load({
+			node: this.treePanel.getRootNode()
+		});
+		*/
+	},
 	initComponent: function () {
 		var scope = this;
 		
@@ -251,7 +281,17 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 			},
 			listeners: {
 				scope: this,
-				load: function(store,records){
+				load: function(store,node,records,success,eOpts){
+					if (typeof this._restoreLoad==='undefined'){
+						this._restoreLoad=false;
+					}
+					for(var i in node.childNodes){
+						if (this.inRestoreExpanded(node.childNodes[i].get('id'))){
+							node.childNodes[i].expand();
+						}
+					}
+					//console.log(node);
+					//console.log(eOpts);
 					/*
 					if (typeof this.delayedFilterID!=='undefined'){
 						window.clearTimeout(this.delayedFilterID);

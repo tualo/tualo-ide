@@ -16,6 +16,19 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		
 		this.callParent([ config ]);
 	},
+	_getTreeState: function(node){
+		var _nodes = {
+			id: node.get('id'),
+			expanded: node.isExpanded()
+		};
+		if (node.childNodes.length>0){
+			_nodes.childs=[];
+			for(var i in node.childNodes){
+				_nodes.childs.push(this._getTreeState(node.childNodes[i]));
+			}
+		}
+		return _nodes;
+	},
 	initComponent: function () {
 		var scope =this;
 		scope.files = [];
@@ -27,13 +40,13 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			listeners: {
 				scope: scope,
 				changed: function(fName){
-					console.log(fName);
+					//console.log(fName);
 					var scope =this;
 					var root = scope.tree.treePanel.getRootNode();
 					var ch = root.findChild('id',fName,true);
 					 
 					if (ch){
-						scope.tree.treePanel.getStore().load(ch.parentNode);
+						scope.tree.treePanel.getStore().load({node: ch.parentNode});
 					}
 				}
 			}
@@ -378,6 +391,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		if (cf!=-1){
 			scope.center.setActiveTab(cf);
 		}
+		scope.tree.restore(JSON.parse(localStorage.getItem(scope.projectID+"_treeState")));
 	},
 	// execution only delayed, for saving resources
 	storeCurrentState: function(delayed){
@@ -406,6 +420,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				var currentFile = scope.center.getActiveTab().fileId;
 				localStorage.setItem(scope.projectID+"_openFiles", JSON.stringify(files));
 				localStorage.setItem(scope.projectID+"_currentFile", currentFile);
+				localStorage.setItem(scope.projectID+"_treeState",JSON.stringify(scope._getTreeState(scope.tree.treePanel.getRootNode())));
 			}catch(err){
 			
 			}
@@ -430,5 +445,6 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		var scope = this;
 		localStorage.setItem(scope.projectID+"_openFiles","");
 		localStorage.setItem(scope.projectID+"_currentFile","");
+		localStorage.setItem(scope.projectID+"_treeState","");
 	}
 });
