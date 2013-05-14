@@ -90,7 +90,9 @@ Ext.define('Ext.tualo.ide.components.Project', {
 					this.storeCurrentState();
 				},
 				filesaved: function(fileObject){
-					this.files[fileObject.id].setTitle(fileObject.name);
+					if (typeof this.files[fileObject.id]!=='undefined'){
+						this.files[fileObject.id].setTitle(fileObject.name);
+					}
 					var nodeList = scope.tree.treePanel.getSelectionModel().getSelection();
 					if (nodeList.length>0){
 						var node = nodeList[0];
@@ -98,7 +100,9 @@ Ext.define('Ext.tualo.ide.components.Project', {
 							scope.tree.treePanel.getStore().load({node: node});
 						}
 					}
-					this.files[fileObject.id].markClean();
+					if (typeof this.files[fileObject.id]!=='undefined'){
+						this.files[fileObject.id].markClean();
+					}
 					this.storeCurrentState();
 				},
 				folderadded: function(data){
