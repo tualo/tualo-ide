@@ -12,11 +12,11 @@ Requirements
 Installation
 ============
 
-If you have git installed:
+If you have installed git:
 
     npm install git://github.com/tualo/tualo-ide.git#v0.0.2-alpha1
 
-If you don't have git installed download and unzip https://github.com/tualo/tualo-ide/archive/v0.0.2-alpha1.zip and run:
+If you don't have installed git download and unzip https://github.com/tualo/tualo-ide/archive/v0.0.2-alpha1.zip and run:
 
 	npm update
 
