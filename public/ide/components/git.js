@@ -75,8 +75,8 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 	tag: function(fileName){
 		var scope = this;
 		Ext.MessageBox.prompt(
-			scope.dictionary.get('git.prompt.commitTitle'),
-			scope.dictionary.get('git.prompt.commitQuestion',fileName),
+			scope.dictionary.get('git.prompt.tagTitle'),
+			scope.dictionary.get('git.prompt.tagQuestion',fileName),
 			function(scope,fileName){
 				return function(ans,txt){
 					
@@ -103,42 +103,67 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 							return; // do nothing
 						}
 						
-						Ext.Ajax.request({
-							url: '/'+scope.projectID+'/git/tag',
-							scope: scope,
-							params: {
-								file: fileName,
-								tag: txt
-							},
-							success: function(response){
-								var scope = this;
-								try{
-									var text = response.responseText;
-									var o = Ext.JSON.decode(text);
-									if (o.success){
-										scope.fireEvent('changed',o.file);
-									}else{
-										Ext.MessageBox.show({
-											title: scope.dictionary.get('gitException'),
-											msg: o.msg,
-											icon: Ext.MessageBox.ERROR,
-											buttons: Ext.MessageBox.OK
-										});
+						Ext.MessageBox.prompt(
+							scope.dictionary.get('git.prompt.tagTitle'),
+							scope.dictionary.get('git.prompt.committagQuestion',fileName),
+							function(scope,fileName){
+								return function(ans,msg){
+									
+									 // no empty messages are allowed
+									if (ans==='ok'){
+										
+										if (msg===''){
+											Ext.MessageBox.show({
+												title: scope.dictionary.get('gitException'),
+												msg: scope.dictionary.get('git.error.emptyMessage'),
+												icon: Ext.MessageBox.ERROR,
+												buttons: Ext.MessageBox.OK
+											});
+											return; // do nothing
+										}
+										
+										
+										Ext.Ajax.request({
+											url: '/'+scope.projectID+'/git/tag',
+											scope: scope,
+											params: {
+												file: fileName,
+												tag: txt,
+												message: msg
+											},
+											success: function(response){
+												var scope = this;
+												try{
+													var text = response.responseText;
+													var o = Ext.JSON.decode(text);
+													if (o.success){
+														scope.fireEvent('changed',o.file);
+													}else{
+														Ext.MessageBox.show({
+															title: scope.dictionary.get('gitException'),
+															msg: o.msg,
+															icon: Ext.MessageBox.ERROR,
+															buttons: Ext.MessageBox.OK
+														});
+													}
+												}catch(error){
+													console.log(error);
+												}
+											},
+											failure: function(){
+												var scope = this;
+												Ext.MessageBox.show({
+													title: scope.dictionary.get('gitException'),
+													msg: scope.dictionary.get('gitNoResponse'),
+													icon: Ext.MessageBox.ERROR,
+													buttons: Ext.MessageBox.OK
+												});
+											}
+										})
 									}
-								}catch(error){
-									console.log(error);
 								}
-							},
-							failure: function(){
-								var scope = this;
-								Ext.MessageBox.show({
-									title: scope.dictionary.get('gitException'),
-									msg: scope.dictionary.get('gitNoResponse'),
-									icon: Ext.MessageBox.ERROR,
-									buttons: Ext.MessageBox.OK
-								});
-							}
-						})
+							})
+						
 					}
 				}
 			}(scope,fileName)

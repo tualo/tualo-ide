@@ -101,7 +101,8 @@ var tag = function(req, res, next) {
 	project.selectProject(req, res, next);
 	var fileID = req.body.file.substring(1);
 	var tag = req.body.tag.replace(/\n/gm,' ').replace(/"/g,'*').replace(/\s/g,'-');
-	var command = 'git tag -a '+tag+' ';
+	var message = req.body.message.replace(/\n/gm,' ').replace(/"/g,'*');
+	var command = 'git tag -a '+tag+' -m "'+message+'"';
 	console.log(command);
 	child_process.exec(command,{
 		timeout: 30000,

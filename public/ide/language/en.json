@@ -55,12 +55,18 @@
 	
 	"git.prompt.commitTitle": "Git commit",
 	"git.prompt.commitQuestion": "Enter the commit Message for {1}.",
+	"git.prompt.tagTitle": "Git tag",
+	"git.prompt.tagQuestion": "Enter the tag name.",
+	"git.prompt.committagQuestion": "Enter the message for tagging.",
+
 	"git.Information": "Information",
 	"git.commiting_not_staged": "The file is not staged, please add them first",
 	"git.menu.commit": "Commit",
 	"git.menu.tag": "add Tag",
 	"git.error.whiteSpaceTag": "white space in tags are not allowed",
 	"git.error.emptyTag": "empty tags are not allowed",
+
+	"git.error.emptyMessage": "empty messages are not allowed",
 	"git.message.push.successTitle": "Git pushed",
 	"git.message.push.successText": "Current repository succesfully pushed"
 }
