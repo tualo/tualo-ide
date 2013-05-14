@@ -11,6 +11,7 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 		if (typeof point==='undefined'){
 			point = this._restore;
 		}
+		if (point!=null)
 		if (typeof point!=='undefined'){
 			if (typeof point.id!=='undefined'){
 				if (point.id===id){
