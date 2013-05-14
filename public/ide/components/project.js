@@ -43,10 +43,13 @@ Ext.define('Ext.tualo.ide.components.Project', {
 					//console.log(fName);
 					var scope =this;
 					var root = scope.tree.treePanel.getRootNode();
-					var ch = root.findChild('id',fName,true);
-					 
-					if (ch){
-						scope.tree.treePanel.getStore().load({node: ch.parentNode});
+					try{
+						// git commits all staged changes
+						// therefor the hole tree must be reloaded
+						scope.tree.restore(scope._getTreeState(root)); // save the current tree state, for later expanding
+						scope.tree.treePanel.getStore().load({node: root});
+					}catch(e){
+						alert(e);
 					}
 				}
 			}
