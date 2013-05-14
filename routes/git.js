@@ -71,7 +71,8 @@ var pushtags = function(req, res, next) {
 	},function(err,stdout,stderr){
 		res.json(200,{
 			success: true,
-			file: req.body.file
+			file: req.body.file,
+			out: stdout
 		});
 	})
 }
