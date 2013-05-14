@@ -294,10 +294,18 @@ var getType = function(filename){
 	return type;
 }
 
-var inFileArray = function(gitStatusA,file){
+var inFileArray = function(gitStatusA,file,useIndexOf){
 	for(var i in gitStatusA){
-		if (gitStatusA[i].file==file){
-			return true;
+		if (useIndexOf===true){
+			if (gitStatusA[i].file.indexOf(file)>-1){
+				if ( (gitStatusA[i].file.length-gitStatusA[i].file.indexOf(file))==file.length ){
+					return true;
+				}
+			}
+		}else{
+			if (gitStatusA[i].file==file){
+				return true;
+			}
 		}
 	}
 	return false;
@@ -344,10 +352,16 @@ var list = function(req, res, next)  {
 						}
 						
 						var _fname = path.join(pathID.substring(1),files[i]);
-						entry.git_ignored = inFileArray(gitStatus.ignored,_fname);
+						entry.git_ignored = inFileArray(gitStatus.ignored,_fname,true);
 						entry.git_staged = inFileArray(gitStatus.staged,_fname);
 						entry.git_notstaged = inFileArray(gitStatus.notstaged,_fname);
 						entry.git_untracked = inFileArray(gitStatus.untracked,_fname);
+						
+						if (entry.id==='/node_modules'){
+							console.log(_fname);
+							console.log(gitStatus.ignored);
+							console.log(entry);
+						}
 						if (entry.type==='folder'){
 							output_folders.push(entry);
 						}else{
@@ -361,7 +375,7 @@ var list = function(req, res, next)  {
 				for(var i in output_files){
 					output.push(output_files[i]);
 				}
-				
+				//console.log(output);
 				res.json(200,output);
 			});
 		});
