@@ -29,6 +29,18 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		}
 		return _nodes;
 	},
+	_reloadTree: function(){
+		var scope =this;
+		var root = scope.tree.treePanel.getRootNode();
+		try{
+			// git commits all staged changes
+			// therefor the hole tree must be reloaded
+			scope.tree.restore(scope._getTreeState(root)); // save the current tree state, for later expanding
+			scope.tree.treePanel.getStore().load({node: root});
+		}catch(e){
+			alert(e);
+		}
+	},
 	initComponent: function () {
 		var scope =this;
 		scope.files = [];
@@ -40,17 +52,12 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			listeners: {
 				scope: scope,
 				changed: function(fName){
-					//console.log(fName);
 					var scope =this;
-					var root = scope.tree.treePanel.getRootNode();
-					try{
-						// git commits all staged changes
-						// therefor the hole tree must be reloaded
-						scope.tree.restore(scope._getTreeState(root)); // save the current tree state, for later expanding
-						scope.tree.treePanel.getStore().load({node: root});
-					}catch(e){
-						alert(e);
-					}
+					scope._reloadTree();
+				},
+				pushed: function(fName){
+					var scope =this;
+					scope._reloadTree();
 				}
 			}
 		})
@@ -211,6 +218,9 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				},
 				gitCommit: function(fileName){
 					scope.git.commit(fileName);
+				},
+				gitPush: function(fileName){
+					scope.git.push(fileName);
 				}
 			}
 		});

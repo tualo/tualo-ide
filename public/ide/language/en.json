@@ -48,6 +48,7 @@
 	"gitMenu": "Git",
 	"gitStatus": "Status",
 	"gitAdd": "Add",
+	"gitPush": "Push",
 	"gitIgnore": "Ignore",
 	"gitException": "Exception",
 	"gitNoResponse": "The server did not send any response",

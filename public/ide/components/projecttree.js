@@ -29,13 +29,6 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 	},
 	restore: function(obj){
 		this._restore=obj;
-		this._restoreLoad=true;
-		/*
-		console.log(obj);
-		this.treePanel.getStore().load({
-			node: this.treePanel.getRootNode()
-		});
-		*/
 	},
 	initComponent: function () {
 		var scope = this;
@@ -182,7 +175,7 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 								scope.fireEvent('gitStatus',fileName);
 							}
 						}
-					},
+					},'-',
 					{
 						text: scope.dictionary.get('gitAdd'),
 						scope: scope,
@@ -223,6 +216,22 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 							}
 						}
 					},'-',
+					{
+						text: scope.dictionary.get('gitPush'),
+						scope: scope,
+						handler: function(){
+							var scope = this;
+							var sel = scope.treePanel.getSelectionModel().getSelection();
+							if (sel.length===1){
+								sel=sel[0];
+								var shortFileName =sel.get('text');
+								var fileName =sel.get('id');
+								var type = sel.get('type');
+								scope.fireEvent('gitPush',fileName);
+							}
+						}
+					}
+					,'-',
 					{
 						text: scope.dictionary.get('gitIgnore'),
 						scope: scope,
@@ -285,19 +294,12 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 					if (typeof this._restoreLoad==='undefined'){
 						this._restoreLoad=false;
 					}
+					// auto expand child nodes if they are stored for restoring
 					for(var i in node.childNodes){
 						if (this.inRestoreExpanded(node.childNodes[i].get('id'))){
 							node.childNodes[i].expand();
 						}
 					}
-					//console.log(node);
-					//console.log(eOpts);
-					/*
-					if (typeof this.delayedFilterID!=='undefined'){
-						window.clearTimeout(this.delayedFilterID);
-					}
-					this.delayedFilterID = Ext.Function.defer(this.delayedFilter, 2000, this, []);
-					*/
 				}
 			}
 		})

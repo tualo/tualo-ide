@@ -150,5 +150,47 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 				});
 			}
 		})
+	},
+	push: function(fileName){
+		Ext.Ajax.request({
+			url: '/'+this.projectID+'/git/push',
+			scope: this,
+			params: {
+				file: fileName
+			},
+			success: function(response){
+				var scope = this;
+				try{
+					var text = response.responseText;
+					var o = Ext.JSON.decode(text);
+					if (o.success){
+						scope.fireEvent('pushed',o.file);
+					}else{
+						Ext.MessageBox.show({
+							title: scope.dictionary.get('gitException'),
+							msg: o.msg,
+							icon: Ext.MessageBox.ERROR,
+							buttons: Ext.MessageBox.OK
+						});
+					}
+				}catch(error){
+					Ext.MessageBox.show({
+						title: scope.dictionary.get('gitException'),
+						msg: response.responseText,
+						icon: Ext.MessageBox.ERROR,
+						buttons: Ext.MessageBox.OK
+					});
+				}
+			},
+			failure: function(){
+				var scope = this;
+				Ext.MessageBox.show({
+					title: scope.dictionary.get('gitException'),
+					msg: scope.dictionary.get('gitNoResponse'),
+					icon: Ext.MessageBox.ERROR,
+					buttons: Ext.MessageBox.OK
+				});
+			}
+		})
 	}
 });
