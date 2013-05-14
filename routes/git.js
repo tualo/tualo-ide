@@ -219,4 +219,5 @@ exports.initRoute=function(app){
 	app.post("/:project/git/add",add);
 	app.post("/:project/git/commit",commit);
 	app.post("/:project/git/push",push);
+	app.post("/:project/git/tag",tag);
 }
