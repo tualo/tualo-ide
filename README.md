@@ -12,6 +12,6 @@ Requirements
 Installation
 ============
 
-    npm install git://github.com/tualo/tualo-ide.git
+    npm install git://github.com/tualo/tualo-ide.git#v0.0.2-alpha1
 
 In the ./config/server.js you can set up the port where the server is listen.
