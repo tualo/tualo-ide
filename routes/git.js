@@ -159,7 +159,7 @@ var _status = function(pathName,fileID,cb) {
 	var command = 'git status';
 	child_process.exec(command,{
 		timeout: 30000,
-		cwd: path.join(path,fileID)
+		cwd: path.join(pathName,fileID)
 	},function(err,stdout,stderr){
 		var p = parse(stdout);
 		_ignored(pathName,function(err,ignored){
