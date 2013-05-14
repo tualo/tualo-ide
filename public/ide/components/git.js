@@ -250,9 +250,9 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 			}
 		})
 	},
-	push: function(fileName){
+	push: function(fileName,tags){
 		Ext.Ajax.request({
-			url: '/'+this.projectID+'/git/push',
+			url: '/'+this.projectID+'/git/push'+( (tags===true)?'tags':'' ),
 			scope: this,
 			params: {
 				file: fileName

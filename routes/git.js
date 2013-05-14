@@ -61,6 +61,22 @@ var push = function(req, res, next) {
 }
 
 
+var pushtags = function(req, res, next) {
+	project.selectProject(req, res, next);
+	//var fileID = req.body.file.substring(1);
+	var command = 'git push --tags';
+	child_process.exec(command,{
+		timeout: 30000,
+		cwd: res.locals.project.basePath
+	},function(err,stdout,stderr){
+		res.json(200,{
+			success: true,
+			file: req.body.file
+		});
+	})
+}
+
+
 
 var add = function(req, res, next) {
 	project.selectProject(req, res, next);
@@ -220,5 +236,6 @@ exports.initRoute=function(app){
 	app.post("/:project/git/add",add);
 	app.post("/:project/git/commit",commit);
 	app.post("/:project/git/push",push);
+	app.post("/:project/git/pushtags",pushtags);
 	app.post("/:project/git/tag",tag);
 }

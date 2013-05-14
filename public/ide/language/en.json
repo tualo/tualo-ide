@@ -49,6 +49,7 @@
 	"gitStatus": "Status",
 	"gitAdd": "Add",
 	"gitPush": "Push",
+	"gitPushTags": "Push with tags",
 	"gitIgnore": "Ignore",
 	"gitException": "Exception",
 	"gitNoResponse": "The server did not send any response",

@@ -249,6 +249,22 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 							}
 						}
 					}
+					,
+					{
+						text: scope.dictionary.get('gitPushTags'),
+						scope: scope,
+						handler: function(){
+							var scope = this;
+							var sel = scope.treePanel.getSelectionModel().getSelection();
+							if (sel.length===1){
+								sel=sel[0];
+								var shortFileName =sel.get('text');
+								var fileName =sel.get('id');
+								var type = sel.get('type');
+								scope.fireEvent('gitPushTags',fileName);
+							}
+						}
+					}
 					,'-',
 					{
 						text: scope.dictionary.get('gitIgnore'),
