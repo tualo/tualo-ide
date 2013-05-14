@@ -1,6 +1,6 @@
 {
 	"name": "tualo-ide",
-	"description": "IDE written in JavaScript ",
+	"description": "IDE written in JavaScript",
 	"homepage": "http://tualo.de",
 	"main": "app.js",
 	"version": "0.0.2",
