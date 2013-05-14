@@ -6,6 +6,7 @@
 
 
 var fs = require('fs');
+var path = require('path');
 var config = require('../config/server').config;
 var project = require('./project');
 var git = require('./git');
@@ -342,10 +343,10 @@ var list = function(req, res, next)  {
 							entry.type =getType(files[i]);
 						}
 						
-						entry.git_staged = inFileArray(gitStatus.staged,pathID.substring(1)+'/'+files[i]);
-						entry.git_notstaged = inFileArray(gitStatus.notstaged,pathID.substring(1)+'/'+files[i]);
-						entry.git_untracked = inFileArray(gitStatus.untracked,pathID.substring(1)+'/'+files[i]);
-						
+						var _fname = path.join(pathID.substring(1),files[i]);
+						entry.git_staged = inFileArray(gitStatus.staged,_fname);
+						entry.git_notstaged = inFileArray(gitStatus.notstaged,_fname);
+						entry.git_untracked = inFileArray(gitStatus.untracked,_fname);
 						if (entry.type==='folder'){
 							output_folders.push(entry);
 						}else{
