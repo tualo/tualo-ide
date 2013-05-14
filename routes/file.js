@@ -357,11 +357,6 @@ var list = function(req, res, next)  {
 						entry.git_notstaged = inFileArray(gitStatus.notstaged,_fname);
 						entry.git_untracked = inFileArray(gitStatus.untracked,_fname);
 						
-						if (entry.id==='/node_modules'){
-							console.log(_fname);
-							console.log(gitStatus.ignored);
-							console.log(entry);
-						}
 						if (entry.type==='folder'){
 							output_folders.push(entry);
 						}else{
