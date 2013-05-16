@@ -31,6 +31,50 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 			}
 		})
 	},
+	commitMsg: function(fileName,txt){
+		var scope = this;
+		
+		//Ext.MessageBox.wait(scope.dictionary.get('pleaseWaitTitle'),scope.dictionary.get('pleaseWait'));
+		Ext.Ajax.request({
+			url: '/'+scope.projectID+'/git/commit',
+			scope: scope,
+			params: {
+				file: fileName,
+				message: txt
+			},
+			success: function(response){
+				var scope = this;
+				//Ext.MessageBox.hide();
+				try{
+					var text = response.responseText;
+					var o = Ext.JSON.decode(text);
+					if (o.success){
+						scope.fireEvent('commitmsg',o.file);
+					}else{
+						Ext.MessageBox.show({
+							title: scope.dictionary.get('gitException'),
+							msg: o.msg,
+							icon: Ext.MessageBox.ERROR,
+							buttons: Ext.MessageBox.OK
+						});
+					}
+				}catch(error){
+					console.log(error);
+				}
+			},
+			failure: function(){
+				var scope = this;
+				Ext.MessageBox.hide();
+				Ext.MessageBox.show({
+					title: scope.dictionary.get('gitException'),
+					msg: scope.dictionary.get('gitNoResponse'),
+					icon: Ext.MessageBox.ERROR,
+					buttons: Ext.MessageBox.OK
+				});
+			}
+		})
+		
+	},
 	commit: function(fileName){
 		var scope = this;
 		
@@ -238,6 +282,48 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 					var o = Ext.JSON.decode(text);
 					if (o.success){
 						scope.fireEvent('changed',o.file);
+					}else{
+						Ext.MessageBox.show({
+							title: scope.dictionary.get('gitException'),
+							msg: o.msg,
+							icon: Ext.MessageBox.ERROR,
+							buttons: Ext.MessageBox.OK
+						});
+					}
+				}catch(error){
+					Ext.MessageBox.show({
+						title: scope.dictionary.get('gitException'),
+						msg: response.responseText,
+						icon: Ext.MessageBox.ERROR,
+						buttons: Ext.MessageBox.OK
+					});
+				}
+			},
+			failure: function(){
+				var scope = this;
+				Ext.MessageBox.show({
+					title: scope.dictionary.get('gitException'),
+					msg: scope.dictionary.get('gitNoResponse'),
+					icon: Ext.MessageBox.ERROR,
+					buttons: Ext.MessageBox.OK
+				});
+			}
+		})
+	},
+	rm: function(fileName){
+		Ext.Ajax.request({
+			url: '/'+this.projectID+'/git/rm',
+			scope: this,
+			params: {
+				file: fileName
+			},
+			success: function(response){
+				var scope = this;
+				try{
+					var text = response.responseText;
+					var o = Ext.JSON.decode(text);
+					if (o.success){
+						scope.fireEvent('removed',o.file);
 					}else{
 						Ext.MessageBox.show({
 							title: scope.dictionary.get('gitException'),
