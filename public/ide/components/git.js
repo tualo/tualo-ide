@@ -121,6 +121,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 							scope.dictionary.get('git.prompt.tagTitle'),
 							scope.dictionary.get('git.prompt.committagQuestion',fileName),
 							function(scope,fileName){
+								console.log(scope);
 								return function(ans,msg){
 						 
 									
