@@ -69,5 +69,14 @@
 
 	"git.error.emptyMessage": "empty messages are not allowed",
 	"git.message.push.successTitle": "Git pushed",
-	"git.message.push.successText": "Current repository succesfully pushed"
+	"git.message.push.successText": "Current repository succesfully pushed",
+	
+	
+	"git.grid.fileName": "Filename",
+	"git.grid.fileStatus": "State",
+	"git.grid.NotStagedFiles": "Not staged",
+	"git.grid.StagedFiles": "Staged",
+	"git.grid.UntrackedFiles": "Untracked",
+	"git.grid.IgnoredFiles": "Ignored",
+	"git.grid.DeletedFiles": "Deleted"
 }

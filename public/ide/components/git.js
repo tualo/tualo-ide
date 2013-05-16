@@ -5,6 +5,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 		this.callParent([ config ]);
 	},
 	status: function(fileName){
+		Ext.MessageBox.wait(this.dictionary.get('pleaseWaitTitle'),this.dictionary.get('pleaseWait'));
 		Ext.Ajax.request({
 			url: '/'+this.projectID+'/git/status',
 			scope: this,
@@ -12,17 +13,27 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 				file: fileName
 			},
 			success: function(response){
+				var scope = this;
+				Ext.MessageBox.hide();
 				try{
 					var text = response.responseText;
-					alert(text);
+					var o = Ext.JSON.decode(text);
+					if (o.success){
+						scope.fireEvent('status',o);
+					}
 				}catch(error){
 					console.log(error);
 				}
+			},
+			failure: function(){
+				Ext.MessageBox.hide();
+				// show message!
 			}
 		})
 	},
 	commit: function(fileName){
 		var scope = this;
+		
 		Ext.MessageBox.prompt(
 			scope.dictionary.get('git.prompt.commitTitle'),
 			scope.dictionary.get('git.prompt.commitQuestion',fileName),
@@ -30,6 +41,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 				return function(ans,txt){
 					if (txt!=='') // no empty messages are allowed
 					if (ans==='ok'){
+						Ext.MessageBox.wait(scope.dictionary.get('pleaseWaitTitle'),scope.dictionary.get('pleaseWait'));
 						Ext.Ajax.request({
 							url: '/'+scope.projectID+'/git/commit',
 							scope: scope,
@@ -39,6 +51,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 							},
 							success: function(response){
 								var scope = this;
+								Ext.MessageBox.hide();
 								try{
 									var text = response.responseText;
 									var o = Ext.JSON.decode(text);
@@ -58,6 +71,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 							},
 							failure: function(){
 								var scope = this;
+								Ext.MessageBox.hide();
 								Ext.MessageBox.show({
 									title: scope.dictionary.get('gitException'),
 									msg: scope.dictionary.get('gitNoResponse'),
@@ -251,6 +265,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 		})
 	},
 	push: function(fileName,tags){
+		Ext.MessageBox.wait(this.dictionary.get('pleaseWaitTitle'),this.dictionary.get('pleaseWait'));
 		Ext.Ajax.request({
 			url: '/'+this.projectID+'/git/push'+( (tags===true)?'tags':'' ),
 			scope: this,
@@ -258,6 +273,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 				file: fileName
 			},
 			success: function(response){
+				Ext.MessageBox.hide();
 				var scope = this;
 				try{
 					var text = response.responseText;
@@ -288,6 +304,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 				}
 			},
 			failure: function(){
+				Ext.MessageBox.hide();
 				var scope = this;
 				Ext.MessageBox.show({
 					title: scope.dictionary.get('gitException'),

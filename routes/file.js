@@ -356,7 +356,9 @@ var list = function(req, res, next)  {
 						entry.git_staged = inFileArray(gitStatus.staged,_fname);
 						entry.git_notstaged = inFileArray(gitStatus.notstaged,_fname);
 						entry.git_untracked = inFileArray(gitStatus.untracked,_fname);
-						
+						//if (_fname.indexOf('save.php')>=0){
+						//	console.log(gitStatus.notstaged);
+						//}
 						if (entry.type==='folder'){
 							output_folders.push(entry);
 						}else{
@@ -392,7 +394,6 @@ exports.initRoute=function(app){
 	app.post("/:project/file/del",del);
 	app.post("/:project/file/delFolder",delFolder);
 	app.post("/:project/file/list",list);
-	
-	
+
 	app.get("/:project/file/list",listGet);
 }

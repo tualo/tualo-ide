@@ -152,6 +152,9 @@ var _ignored = function(pathName,cb){
 			cb(err,null);
 		}
 		var f = (data+'').split("\n");
+		if (f[f.length-1]===''){
+			f.pop(); // remov last empty line
+		}
 		cb(null,f);
 	});
 }

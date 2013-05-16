@@ -6,7 +6,8 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		'Ext.tualo.ide.components.IO',
 		'Ext.tualo.ide.components.GIT',
 		'Ext.tualo.ide.components.CodeMirror',
-		'Ext.tualo.ide.components.Process'
+		'Ext.tualo.ide.components.Process',
+		'Ext.tualo.ide.components.GitWindow'
 	],
 	projectID: 'none',
 	layout: 'fit',
@@ -212,7 +213,17 @@ Ext.define('Ext.tualo.ide.components.Project', {
 					scope.io.del(fileName);
 				},
 				gitStatus: function(fileName){
-					scope.git.status(fileName);
+					var scope=this;
+					var w = Ext.create('Ext.tualo.ide.components.GitWindow',{
+						projectID: scope.projectID,
+						projectTitle: scope.projectTitle,
+						dictionary: scope.dictionary,
+						modal: true,
+						closeAction: 'destroy',
+						width: scope.getWidth()*0.8,
+						height: scope.getHeight()*0.8
+					});
+					w.show();
 				},
 				gitAdd: function(fileName){
 					scope.git.add(fileName);
@@ -286,7 +297,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 	addTab: function(fileObject){
 		var scope = this;
 		if (!scope._validFileObject(fileObject)){ 
-			console.log('_validFileObject returned false: nothing is done');
+			//console.log('_validFileObject returned false: nothing is done');
 			return; // given object contains errors
 		}
 		
