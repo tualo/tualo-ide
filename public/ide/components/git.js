@@ -116,12 +116,13 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 							});
 							return; // do nothing
 						}
-						
+						 
 						Ext.MessageBox.prompt(
 							scope.dictionary.get('git.prompt.tagTitle'),
 							scope.dictionary.get('git.prompt.committagQuestion',fileName),
 							function(scope,fileName){
 								return function(ans,msg){
+						 
 									
 									 // no empty messages are allowed
 									if (ans==='ok'){
@@ -136,7 +137,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 											return; // do nothing
 										}
 										
-										
+										 
 										Ext.Ajax.request({
 											url: '/'+scope.projectID+'/git/tag',
 											scope: scope,
@@ -176,7 +177,7 @@ Ext.define('Ext.tualo.ide.components.GIT', {
 										})
 									}
 								}
-							})
+							}(scope,fileName))
 						
 					}
 				}
