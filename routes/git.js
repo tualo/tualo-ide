@@ -121,7 +121,6 @@ var commit = function(req, res, next) {
 	var fileID = req.body.file;
 	var message = req.body.message.replace(/\n/gm,' ').replace(/"/g,'*');
 	var command = 'git commit -m "'+message+'" .'+fileID;
-	console.log(command);
 	child_process.exec(command,{
 		timeout: 30000,
 		cwd: res.locals.project.basePath
