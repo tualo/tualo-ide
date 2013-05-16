@@ -78,5 +78,9 @@
 	"git.grid.StagedFiles": "Staged",
 	"git.grid.UntrackedFiles": "Untracked",
 	"git.grid.IgnoredFiles": "Ignored",
-	"git.grid.DeletedFiles": "Deleted"
+	"git.grid.DeletedFiles": "Deleted",
+	
+	"git.grid.delete.selectedFiles": "remove selected Files from repository",
+	"git.grid.add.selectedFiles": "add selected Files to repository",
+	"git.grid.commit.selectedFiles": "commit selected Files to repository"
 }
