@@ -42,7 +42,7 @@ Ext.define('Ext.tualo.ide.components.GitWindow', {
 								if (txt!=='') // no empty messages are allowed
 									if (ans==='ok'){
 										scope.operateProgressMessage = txt;
-										scope.git.commitMsg(fileName,txt);
+										scope.git.commitMsg('/'+fileName,txt);
 									}
 							}
 						}(scope,records[index].get('file'))
