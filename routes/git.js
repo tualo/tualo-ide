@@ -97,12 +97,31 @@ var add = function(req, res, next) {
 
 
 
+
+var rm = function(req, res, next) {
+	project.selectProject(req, res, next);
+	var fileID = req.body.file;
+	
+	var command = 'git rm .'+fileID;
+	child_process.exec(command,{
+		timeout: 30000,
+		cwd: res.locals.project.basePath
+	},function(err,stdout,stderr){
+		res.json(200,{
+			success: true,
+			file: req.body.file
+		});
+	})
+}
+
+
+
 var commit = function(req, res, next) {
 	project.selectProject(req, res, next);
-	var fileID = req.body.file.substring(1);
+	var fileID = req.body.file;
 	var message = req.body.message.replace(/\n/gm,' ').replace(/"/g,'*');
-	var command = 'git commit -m "'+message+'"';
-	 
+	var command = 'git commit -m "'+message+'" .'+fileID;
+	console.log(command);
 	child_process.exec(command,{
 		timeout: 30000,
 		cwd: res.locals.project.basePath
@@ -238,6 +257,7 @@ exports.initRoute=function(app){
 	app.post("/:project/git/status",status);
 	app.post("/:project/git/ignore",ignore);
 	app.post("/:project/git/add",add);
+	app.post("/:project/git/rm",rm);
 	app.post("/:project/git/commit",commit);
 	app.post("/:project/git/push",push);
 	app.post("/:project/git/pushtags",pushtags);
