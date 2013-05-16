@@ -14,9 +14,9 @@ Installation
 
 If you have installed git:
 
-    npm install git://github.com/tualo/tualo-ide.git#v0.0.3-alpha1
+    npm install git://github.com/tualo/tualo-ide.git#v0.0.3-alpha2
 
-If you don't have installed git download and unzip https://github.com/tualo/tualo-ide/archive/v0.0.3-alpha1.zip and run:
+If you don't have installed git download and unzip https://github.com/tualo/tualo-ide/archive/v0.0.3-alpha2.zip and run:
 
 	npm update
 
