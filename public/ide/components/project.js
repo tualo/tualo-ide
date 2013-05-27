@@ -79,6 +79,28 @@ Ext.define('Ext.tualo.ide.components.Project', {
 					}
 					this.storeCurrentState();
 				},
+				filestat: function(response){
+					var scope = this;
+					var activeTab = scope.center.getActiveTab();
+					if (activeTab.fileId==response.file){
+						if (activeTab.mtime<response.mtime){
+							Ext.MessageBox.confirm(
+								scope.dictionary.get('project.file.changedExternaly.title'),
+								scope.dictionary.get('project.file.changedExternaly.text')
+								+' '+activeTab.mtime+'<'+response.mtime,
+								function(btn){
+									var scope = this;
+									var activeTab = scope.center.getActiveTab();
+									if (btn==='yes'){
+										scope.io.open(activeTab.fileId);
+									}
+								}
+								,scope
+							);
+						}
+					}
+				
+				},
 				fileadded: function(fileObject){
 					this.addTab(fileObject);
 					var nodeList = scope.tree.treePanel.getSelectionModel().getSelection();
@@ -93,6 +115,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				filesaved: function(fileObject){
 					if (typeof this.files[fileObject.id]!=='undefined'){
 						this.files[fileObject.id].setTitle(fileObject.name);
+						this.files[fileObject.id].mtime=fileObject.mtime
 					}
 					var nodeList = scope.tree.treePanel.getSelectionModel().getSelection();
 					if (nodeList.length>0){
@@ -258,7 +281,12 @@ Ext.define('Ext.tualo.ide.components.Project', {
 					component.doLayout();
 				},
 				activate: function(component,eOpt){
+					console.log(component);
 					component.doLayout();
+				},
+				tabchange: function( tabPanel, newCard, oldCard, eOpts ){
+					var scope = this;
+					scope.io.stat(newCard.fileId);
 				}
 			}
 		});
@@ -325,7 +353,10 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			scope.files[fileObject.id] = edtTab;
 		}else{
 			// the tab all ready exits, set it active
-			tabPanel.setActiveTab(scope.files[fileObject.id]);
+			var tab = scope.files[fileObject.id];
+			tab.setContent(fileObject.data);
+			tab.mtime = fileObject.mtime;
+			scope.center.setActiveTab(tab);
 		}
 		scope.storeCurrentState();
 	},
