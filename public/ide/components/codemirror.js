@@ -33,6 +33,12 @@ Ext.define('Ext.tualo.ide.components.CodeMirror', {
 		}
 		return this.CodeMirror.doc.getValue("\n");
 	},
+	setContent: function(content){
+		if (typeof this.CodeMirror==='undefined'){
+			return "";
+		}
+		return this.CodeMirror.doc.setValue(content);
+	},
 	markClean: function(){
 		if (typeof this.CodeMirror==='undefined'){
 			return true;
