@@ -54,10 +54,12 @@ var stat = function(req, res, next){
 			res.json(200,{
 				success: true,
 				mtime: stats.mtime,
+				file: req.body.file
 			});
 		}else{
 			res.json(200,{
 				success: false,
+				file: req.body.file,
 				msg: "The file does not exists"
 			});
 		}
