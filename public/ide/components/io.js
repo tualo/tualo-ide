@@ -15,9 +15,9 @@ Ext.define('Ext.tualo.ide.components.IO', {
 			success: function(response){
 				try{
 					var text = response.responseText;
-					console.log(this);
+					//console.log(this);
 					this.fireEvent('fileopened',Ext.JSON.decode(text));
-					console.log('fileopened');
+					//console.log('fileopened');
 				}catch(error){
 					console.log(error);
 				}
