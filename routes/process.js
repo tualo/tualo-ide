@@ -15,6 +15,9 @@ var io = null;
 var startProcess= function(project,data,socket){
 	var running_process = running_processes[project.name];
 	
+	console.log(project.process.cmd);
+	console.log(project.process.params);
+	
 	if (running_process != null){
 		process_restart[project.name]=true;
 		running_process.kill();
@@ -38,7 +41,7 @@ var startProcess= function(project,data,socket){
 			onProcessMessage(socket,data);
 		});
 		running_processes[project.name] = running_process;
-		/*
+		
 		running_process.on('close',function(project){
 			// onProcessClose needs the project object for
 			// restarting a kill process
@@ -47,9 +50,10 @@ var startProcess= function(project,data,socket){
 				onProcessClose(project,code, signal);
 			}
 		}(project));
+		
 		running_process.on('exit',onProcessExit);
 		console.log('process_started');
-		*/
+		
 	}
 }
 
@@ -88,7 +92,7 @@ var onProcessMessage = function (socket,message, sendHandle){
 }
 
 var onProcessClose = function (project,code, signal){
-	//console.log('onProcessClose: '+code);
+	console.log('onProcessClose: '+code);
 	/*
 	running_process = null;
 	if (process_restart===true){
@@ -99,13 +103,13 @@ var onProcessClose = function (project,code, signal){
 }
 
 var onProcessExit = function (code, signal){
-	//console.log('onProcessExit: '+code);
+	console.log('onProcessExit: '+code);
 	//running_process = null;
 }
 
 
 var onProcessError = function (err){
-	//console.log('onProcessError: '+err);
+	console.log('onProcessError: '+err);
 	//running_process = null;
 }
 

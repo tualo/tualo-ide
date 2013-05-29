@@ -85,9 +85,8 @@ Ext.define('Ext.tualo.ide.components.Project', {
 					if (activeTab.fileId==response.file){
 						if (activeTab.mtime<response.mtime){
 							Ext.MessageBox.confirm(
-								scope.dictionary.get('project.file.changedExternaly.title'),
-								scope.dictionary.get('project.file.changedExternaly.text')
-								+' '+activeTab.mtime+'<'+response.mtime,
+								scope.dictionary.get('project.file.changedExternally.title'),
+								scope.dictionary.get('project.file.changedExternally.text'),
 								function(btn){
 									var scope = this;
 									var activeTab = scope.center.getActiveTab();
@@ -354,8 +353,12 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		}else{
 			// the tab all ready exits, set it active
 			var tab = scope.files[fileObject.id];
+			
 			tab.setContent(fileObject.data);
 			tab.mtime = fileObject.mtime;
+			tab.markClean();
+			var title = tab.getTitle();
+			tab.setTitle(title.replace('*',''));
 			scope.center.setActiveTab(tab);
 		}
 		scope.storeCurrentState();
