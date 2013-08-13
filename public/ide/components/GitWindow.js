@@ -27,12 +27,34 @@ Ext.define('Ext.tualo.ide.components.GitWindow', {
 			scope.operateProgressIndex = index;
 			scope.operateProgress.updateProgress( index/records.length);
 			if (operation=='delete'){
-				scope.git.rm('/'+records[index].get('file'));
+				var fn_list = '';
+				while(scope.operateProgressIndex<records.length){
+					if (fn_list!=''){
+						fn_list += ' ';
+					}
+					var fn = records[scope.operateProgressIndex].get('file');
+					if (fn.substring(0,1)==' ')
+						fn = fn.substring(1);
+					fn_list += '/'+fn;
+					scope.operateProgressIndex++;
+				}
+				scope.git.rm(fn_list);
 			}
 			if (operation=='add'){
 				scope.git.add('/'+records[index].get('file'));
 			}
 			if (operation=='commit'){
+				var fn_list = '';
+				while(scope.operateProgressIndex<records.length){
+					if (fn_list!=''){
+						fn_list += ' ';
+					}
+					var fn = records[scope.operateProgressIndex].get('file');
+					if (fn.substring(0,1)==' ')
+						fn = fn.substring(1);
+					fn_list += '/'+fn;
+					scope.operateProgressIndex++;
+				}
 				if (index==0){
 					Ext.MessageBox.prompt(
 						scope.dictionary.get('git.prompt.commitTitle'),
@@ -42,13 +64,13 @@ Ext.define('Ext.tualo.ide.components.GitWindow', {
 								if (txt!=='') // no empty messages are allowed
 									if (ans==='ok'){
 										scope.operateProgressMessage = txt;
-										scope.git.commitMsg('/'+fileName,txt);
+										scope.git.commitMsg(fileName,txt);
 									}
 							}
-						}(scope,records[index].get('file'))
+						}(scope,fn_list)
 					);
 				}else{
-					scope.git.commitMsg('/'+records[index].get('file'),scope.operateProgressMessage);
+					scope.git.commitMsg(fn_list,scope.operateProgressMessage);
 				}
 			}
 		}else{
@@ -151,7 +173,7 @@ Ext.define('Ext.tualo.ide.components.GitWindow', {
 					scope: scope,
 					handler: function(btn){
 						var scope=this;
-						scope.operate('remove',scope.deleted.getSelectionModel().getSelection(),0);
+						scope.operate('delete',scope.deleted.getSelectionModel().getSelection(),0);
 					}
 				}
 			]

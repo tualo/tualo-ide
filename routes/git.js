@@ -102,7 +102,15 @@ var rm = function(req, res, next) {
 	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	
-	var command = 'git rm .'+fileID;
+	var fileList = fileID.split(' ');
+	var files = '';
+	for(var i in fileList){
+		if (files!=''){
+			files+=' ';
+		}
+		files += '.'+fileList[i]; 
+	}
+	var command = 'git rm '+files;
 	child_process.exec(command,{
 		timeout: 30000,
 		cwd: res.locals.project.basePath
@@ -119,8 +127,18 @@ var rm = function(req, res, next) {
 var commit = function(req, res, next) {
 	project.selectProject(req, res, next);
 	var fileID = req.body.file;
+	
+	var fileList = fileID.split(' ');
+	var files = '';
+	for(var i in fileList){
+		if (files!=''){
+			files+=' ';
+		}
+		files += '.'+fileList[i]; 
+	}
+	
 	var message = req.body.message.replace(/\n/gm,' ').replace(/"/g,'*');
-	var command = 'git commit -m "'+message+'" .'+fileID;
+	var command = 'git commit -m "'+message+'" '+files;
 	child_process.exec(command,{
 		timeout: 30000,
 		cwd: res.locals.project.basePath
