@@ -27,7 +27,7 @@
     this.overlay = null;
   }
   function getSearchState(cm) {
-    return cm._searchState || (cm._searchState = new SearchState());
+    return cm.state.search || (cm.state.search = new SearchState());
   }
   function getSearchCursor(cm, query, pos) {
     // Heuristic: if the query string is all lowercase, do a case insensitive search.
@@ -45,7 +45,8 @@
     var isRE = query.match(/^\/(.*)\/([a-z]*)$/);
     return isRE ? new RegExp(isRE[1], isRE[2].indexOf("i") == -1 ? "" : "i") : query;
   }
-  var queryDialog = 'Search: <input type="text" style="width: 10em"/> <span style="color: #888">(Use /re/ syntax for regexp search)</span>';
+  var queryDialog =
+    'Search: <input type="text" style="width: 10em"/> <span style="color: #888">(Use /re/ syntax for regexp search)</span>';
   function doSearch(cm, rev) {
     var state = getSearchState(cm);
     if (state.query) return findNext(cm, rev);
@@ -54,7 +55,7 @@
         if (!query || state.query) return;
         state.query = parseQuery(query);
         cm.removeOverlay(state.overlay);
-        state.overlay = searchOverlay(query);
+        state.overlay = searchOverlay(state.query);
         cm.addOverlay(state.overlay);
         state.posFrom = state.posTo = cm.getCursor();
         findNext(cm, rev);
@@ -69,6 +70,7 @@
       if (!cursor.find(rev)) return;
     }
     cm.setSelection(cursor.from(), cursor.to());
+    cm.scrollIntoView({from: cursor.from(), to: cursor.to()});
     state.posFrom = cursor.from(); state.posTo = cursor.to();
   });}
   function clearSearch(cm) {cm.operation(function() {
@@ -107,6 +109,7 @@
                   (start && cursor.from().line == start.line && cursor.from().ch == start.ch)) return;
             }
             cm.setSelection(cursor.from(), cursor.to());
+            cm.scrollIntoView({from: cursor.from(), to: cursor.to()});
             confirmDialog(cm, doReplaceConfirm, "Replace?",
                           [function() {doReplace(match);}, advance]);
           };

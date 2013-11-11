@@ -251,8 +251,9 @@ var getType = function(filename){
 			type = 'javascript';
 			break;
 		case 'jade':
-			type = 'less';
+			type = 'jade';
 			break;
+		case 'ss':
 		case 'php':
 			type = 'php';
 			break;

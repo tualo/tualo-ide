@@ -35,6 +35,7 @@ html(lang="de")
 		script(src='/codemirror/addon/hint/xml-hint.js')
 		script(src='/codemirror/addon/hint/show-hint.js')
 
+		script(src='/codemirror/mode/jade/jade.js')
 		script(src='/codemirror/mode/less/less.js')
 		script(src='/codemirror/mode/javascript/javascript.js')
 		script(src='/codemirror/mode/clike/clike.js')
@@ -67,7 +68,6 @@ html(lang="de")
 		link(rel='stylesheet', href='/extjs/resources/ext-theme-neptune/ext-theme-neptune-all.css')
 
 		link(rel='stylesheet', href='/ide/layout.css')
-
 		script(src='/extjs/ext-all.js')
 		-if (typeof locals.project!='undefined')
 			script(src='/ide/app.js')
