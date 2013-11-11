@@ -144,5 +144,23 @@ Ext.define('Ext.tualo.ide.components.IO', {
 				}
 			}
 		})
+	},
+	beautify: function(fileName,content){
+		Ext.Ajax.request({
+			url: '/'+this.projectID+'/syntax/beautify',
+			scope: this,
+			params: {
+				file: fileName,
+				content: content
+			},
+			success: function(response){
+				try{
+					var text = response.responseText;
+					this.fireEvent('beautified',Ext.JSON.decode(text));
+				}catch(error){
+					console.log(error);
+				}
+			}
+		})
 	}
 });

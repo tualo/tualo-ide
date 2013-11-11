@@ -17,6 +17,7 @@ Ext.define('Ext.tualo.ide.components.CodeMirror', {
 		CodeMirror.keyMap[this.editorID] =  {
 			'Cmd-S': function(scope){return function(cm){scope.save()}}(this),
 			'Ctrl-S': function(scope){return function(cm){scope.save()}}(this),
+			'Ctrl-B': function(scope){return function(cm){scope.beautify()}}(this),
 			fallthrough: ['default']
 		};
 		
@@ -26,6 +27,10 @@ Ext.define('Ext.tualo.ide.components.CodeMirror', {
 	save: function(){
 		var scope = this;
 		scope.fireEvent('saveRequest',scope)
+	},
+	beautify: function(){
+		var scope = this;
+		scope.fireEvent('beautifyRequest',scope)
 	},
 	getContent: function(){
 		if (typeof this.CodeMirror==='undefined'){

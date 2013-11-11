@@ -260,6 +260,8 @@ var getType = function(filename){
 			type = 'css';
 			break;
 		case 'xml':
+		case 'xsl':
+		case 'xslt':
 			type = 'xml';
 			break;
 		case 'sass':

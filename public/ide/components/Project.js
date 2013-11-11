@@ -153,6 +153,14 @@ Ext.define('Ext.tualo.ide.components.Project', {
 					}
 					this.storeCurrentState();
 				},
+				beautify: function(data){
+					var scope = this;
+					var panel = scope.center.getActiveTab();
+					panel.setTitle(panel.name+'*');
+					scope.files[panel.fileId].setContent(data.data);
+					//scope.io.checkSyntax(panel.fileId,scope.files[panel.fileId].getContent());
+					//scope.storeCurrentState();
+				},
 				syntaxChecked: function(data){
 					var scope = this;
 					if (typeof scope.files[data.id]!=='undefined'){
@@ -182,7 +190,20 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				}
 		});
 		
+		buttons.push({
+			text: scope.dictionary.get('buttonBeautify'),
+			glyph: 0xf0c7,
+			scale: 'small',
+				scope: scope,
+				handler: function(){
+					var scope = this;
+					var panel = scope.center.getActiveTab();
+					panel.beautify();
+				}
+		});
+		
 		buttons.push('->');
+		
 		
 		if (typeof scope.projectConfig.process!=='undefined'){
 			// show process btn only if there is a commend defined
@@ -343,6 +364,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				listeners: {
 					scope: scope,
 					saveRequest: scope._saveRequest,
+					beautifyRequest: scope._beautifyRequest,
 					contentChanged: scope._contentChanged,
 					beforeclose: scope._beforeClose,
 					close: scope._close
@@ -383,6 +405,14 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		var scope = this;
 		scope.io.save(cmTab.fileId,cmTab.getContent());
 	},
+	/**
+	* called when the codemirror beautify key combination was pressed
+	*/
+	_beautifyRequest: function(cmTab){
+		var scope = this;
+		scope.io.beautify(cmTab.fileId,cmTab.getContent());
+	},
+	
 	/**
 	* called when the codemirror save key combination was pressed
 	*/
