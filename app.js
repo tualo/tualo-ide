@@ -5,10 +5,14 @@
  * Last Changes: 2013-04-16
  *  
  */ 
+var express = require('express');
+var socketIO = require('socket.io');
+var SessionSockets = require('session.socket.io');
+
 
 var routes = ['project','sign','ui','file','syntax','process','git'];
 
-var express = require('express');
+
 var config;
 var http = require('http');
 var path = require('path');
@@ -17,8 +21,11 @@ var loggerLib = new require('./lib/logger');
 var logger = new loggerLib();
 
 var app;
+var io;
 
 function initServer(){
+	var cookieParser = express.cookieParser(config.session_secret);
+	var sessionStore = express.session({ secret: config.session_secret});
 	app = express();
 	app.configFile = config;
 	app.configure(function(){
@@ -26,8 +33,8 @@ function initServer(){
 		app.set('views', __dirname + '/views');
 		app.set('view engine', 'jade');
 		app.use(express.bodyParser());
-		app.use(express.cookieParser());
-		app.use(express.session({ secret: config.session_secret}));
+		app.use(cookieParser);
+		app.use(sessionStore);
 		app.use(express.static(path.join(__dirname, 'public')));
 		
 		
@@ -40,9 +47,15 @@ function initServer(){
 	server.listen(app.get('port'), function(){
 		console.log("tualo - IDE - Server listening on port " + app.get('port'));
 	});
+
+	var sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
+	io = socketIO.listen(app.server);
+	io.set('log level',1); // show only warnings
 	
-	app.server = server; // bring the baseDir to the project-route
-	app.startDirectory = __dirname; // bring the baseDir to the project-route
+	app.set('io',io);
+	app.set('sessionIO',sessionSockets);
+	
+	app.set('startDirectory',__dirname); // make the baseDir accessible the project-route(s)
 	for(var i in routes){
 		require('./routes/'+routes[i]).initRoute(app);
 	}

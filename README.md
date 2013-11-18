@@ -47,5 +47,5 @@ You also can run the service as single instance:
 
 	tualo-ide
 
-After the service is started successfully open the browser and browse to http://<your host>:<your port>/.
+After the service is started successfully open the browser and browse to http://[your host]:[your port]/.
 

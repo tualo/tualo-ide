@@ -1,15 +1,9 @@
-/**
- * Created with tualo IDE.
- * Author: Thomas Hoffmann
- * Date: 2013-04-22
- */
 var file = require('./file');
 var process = require('child_process');
+var io;
 
-var running_processes = {};
-var process_restart = {};
-var io = null;
-
+var running_processes	=	{}; // keepin
+var process_restart 	=	{};
 
 var startProcess= function(project,data,socket){
 	var running_process = running_processes[project.name];
@@ -90,13 +84,6 @@ var onProcessMessage = function (socket,message, sendHandle){
 
 var onProcessClose = function (project,code, signal){
 	console.log('onProcessClose: '+code);
-	/*
-	running_process = null;
-	if (process_restart===true){
-		process_restart=false; // to prevend an endless loop 
-		startProcess(project);
-	}
-	*/
 }
 
 var onProcessExit = function (code, signal){
@@ -107,30 +94,33 @@ var onProcessExit = function (code, signal){
 
 var onProcessError = function (err){
 	console.log('onProcessError: '+err);
-	//running_process = null;
 }
 
+
 var initSocketForProject= function(project){
-	var chat = io.of('/'+project.name+'/process').on('connection', function (err,socket,session) {
+	var chat = io.of('/'+project.name+'/console').on('connection', function (err,socket,session) {
 		console.log(session);
-		
-		socket.on('start process',function(data){
+		socket.on('input',function(data){
 			startProcess(project,data,socket,session);
 		});
 		
-		socket.on('stop process',function(data){
+		socket.on('open',function(data){
+			startProcess(project,data,socket,session);
+		});
+		
+		socket.on('close',function(data){
 			stopProcess(project,data,socket,session);
 		});
 		
 		socket.on('disconnect', function () {
 			stopProcess(project,null,socket,session);
 		});
+		
 	});
 }
 
+
 exports.initRoute=function(app){
-	
-	
 	io = app.get('sessionIO');
 	for(var i in app.projects){
 		initSocketForProject(projects[i]);
