@@ -8,11 +8,11 @@
 		"node": ">=0.8.0"
 	},
 	"maintainers": [
-	{
-		"name": "Thomas Hoffmann",
-		"email": "thomas.hoffmann@tualo.de",
-		"url": "http://tualo.de/"
-	}
+		{
+			"name": "Thomas Hoffmann",
+			"email": "thomas.hoffmann@tualo.de",
+			"url": "http://tualo.de/"
+		}
 	],
 	"bin": {
 		"tualo-ide": "./bin/tualo-ide"

@@ -493,7 +493,9 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				cf=i;
 			}
 		}
-		Ext.defer(scope._restoreCurrentStateReTap,500,this,[0,files.length,cf]);
+		if (files!=null){
+			Ext.defer(scope._restoreCurrentStateReTap,500,this,[0,files.length,cf]);
+		}
 		scope.tree.restore(Ext.JSON.decode(localStorage.getItem(scope.projectID+"_treeState")));
 	},
 	_restoreCurrentStateReTap: function(index,max,cf){
