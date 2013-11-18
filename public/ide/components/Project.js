@@ -472,6 +472,12 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		var scope = this;
 		var files = Ext.JSON.decode(localStorage.getItem(scope.projectID+"_openFiles"));
 		var currentFile = localStorage.getItem(scope.projectID+"_currentFile");
+		if (typeof files=='undefined'){
+			files = [];
+		}
+		if (typeof currentFile=='undefined'){
+			currentFile = '';
+		}
 		var cf = -1;
 		for(var i in files){
 			var fileObject = {
@@ -487,11 +493,6 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				cf=i;
 			}
 		}
-		/*
-		if (cf!=-1){
-			scope.center.setActiveTab(cf);
-		}
-		*/
 		Ext.defer(scope._restoreCurrentStateReTap,500,this,[0,files.length,cf]);
 		scope.tree.restore(Ext.JSON.decode(localStorage.getItem(scope.projectID+"_treeState")));
 	},
