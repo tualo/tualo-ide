@@ -1,7 +1,7 @@
 Description
 ===========
 
-tualo-ide is an development environment for browsers.
+tualo-ide is an development environment running in browsers.
 
 
 Requirements
