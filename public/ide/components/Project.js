@@ -1,6 +1,6 @@
 // Sample Text
 Ext.define('Ext.tualo.ide.components.Project', {
-	extend: 'Ext.container.Viewport',
+	extend: 'Ext.panel.Panel',
 	requires: [
 		'Ext.tualo.ide.components.ProjectTree',
 		'Ext.tualo.ide.components.IO',
@@ -301,7 +301,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 					component.doLayout();
 				},
 				activate: function(component,eOpt){
-					console.log(component);
+					//console.log(component);
 					component.doLayout();
 				},
 				tabchange: function( tabPanel, newCard, oldCard, eOpts ){

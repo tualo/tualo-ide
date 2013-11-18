@@ -14,12 +14,17 @@ Ext.application({
 			loadLanguage: window.navigator.language,
 			listeners:{
 				loaded: function(dict){
-					Ext.create('Ext.tualo.ide.components.Project', {
-						projectID: projectID, // is set by layout.jade layout,
-						projectTitle: projectTitle,
-						projectConfig: projectConfig,
-						dictionary: dict
-					});
+					Ext.create('Ext.container.Viewport',{
+						layout: 'fit',
+						items: [
+							Ext.create('Ext.tualo.ide.components.Project', {
+								projectID: projectID, // is set by layout.jade layout,
+								projectTitle: projectTitle,
+								projectConfig: projectConfig,
+								dictionary: dict
+							})
+						]
+				});
 				}
 			}
 		});

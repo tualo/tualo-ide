@@ -8,8 +8,6 @@ var config = require('../config/server').config;
 //var project = require('./project');
 
 var indexUI = function(req, res, next) {
-	console.log(res.locals.project);
-	
 	res.render('layout',{
 		title: res.locals.project.title,
 		project: req.params.project,
@@ -18,7 +16,6 @@ var indexUI = function(req, res, next) {
 }
 
 var startUI = function(req, res, next) {
-	
 	res.render('layout',{
 		title: 'tualo IDE'
 	});

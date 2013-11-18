@@ -1,4 +1,5 @@
-// Sample Text
+// The project overview, seen at startup
+//
 Ext.define('Ext.tualo.ide.components.InitProject', {
 	extend: 'Ext.container.Viewport',
 	requires: [
@@ -74,11 +75,11 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 		});
 		scope.xid = Ext.id();
 		scope.treePanel = Ext.create('Ext.tree.Panel', {
+			store: store,
+			rootVisible: true,
 			region: 'west',
 			split: true,
 			width: 300,
-			store: store,
-			rootVisible: true,
 			root: {
 				text: scope.dictionary.get('ProjectsTreeTitle'),
 				expanded: true,
@@ -99,16 +100,9 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 						Ext.getCmp('save-'+scope.xid).setText(scope.dictionary.get('formProjectSaveBtn'));
 					}
 				},
-				itemdblclick: function( scope, record, item, index, e, eOpts ){
+				itemdblclick: function( me, record, item, index, e, eOpts ){
 					if (record.get('id')!==''){
-						window.open(window.location.href+record.get('id'),'_blank',
-						[
-							'location=no',
-							'menubar=no',
-							'status=no',
-							'toolbar=no',
-							'titlebar=no'
-						].join(','));
+						scope.openProject(record.get('id'),record.get('text'));
 					}
 				},
 				itemcontextmenu: function( tPanel, record, item, index, e, eOpts ){
@@ -198,17 +192,53 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 				scope.defaultProjectForm
 			]
 		});
-		 
+		
+		
+
+		var p = Ext.create('Ext.panel.Panel',{
+			title: 'tualo IDE',
+			layout: {
+				type: 'border',
+				padding: 5
+			},
+			items: [scope.treePanel,scope.overview]
+		});
+		scope.ptreepanel = Ext.create('Ext.tab.Panel', {
+			tabPosition: 'left',
+			items: [ p ]
+		});
+		
 		scope.items = [
-			Ext.create('Ext.panel.Panel',{
-				title: 'tualo IDE',
-				layout: {
-					type: 'border',
-					padding: 5
-				},
-				items: [scope.treePanel,scope.overview]
-			})
-		]
+			scope.ptreepanel
+		];
+		
 		scope.callParent(arguments);
+		
+	},
+	openProjectInNewWindow: false,
+	openProject: function(id,title){
+		var scope = this;
+		if (scope.openProjectInNewWindow){
+			window.open(window.location.href+id,'_blank',
+									[
+										'location=no',
+										'menubar=no',
+										'status=no',
+										'toolbar=no',
+										'titlebar=no'
+									].join(','));
+		}else{
+			var project = Ext.create('Ext.tualo.ide.components.Project', {
+				title: title,
+				closable: true,
+				closeAction: 'destroy',
+				projectID: id, // is set by layout.jade layout,
+				projectTitle: title,
+				projectConfig: {},
+				dictionary: scope.dictionary
+			});
+			scope.ptreepanel.add(project);
+			scope.ptreepanel.setActiveTab(project);
+		}
 	}
 });
