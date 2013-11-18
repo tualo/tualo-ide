@@ -81,9 +81,9 @@
 	"git.grid.DeletedFiles": "Deleted",
 	
 	"git.grid.delete.selectedFiles": "remove selected Files from repository",
-	"git.grid.add.selectedFiles": "add selected Files to repository",
+	"git.grid.add.selectedFiles": "add selected Files to stage",
 	"git.grid.commit.selectedFiles": "commit selected Files to repository",
-	
+	"git.grid.reset.selectedFiles": "reset Files from stage",
 	"project.file.changedExternally.title": "File has been changed",
 	"project.file.changedExternally.text": "The file has changed externally, do you want load the changed file?"
 }
