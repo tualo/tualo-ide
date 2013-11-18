@@ -95,6 +95,26 @@ var add = function(req, res, next) {
 	})
 }
 
+var reset = function(req, res, next) {
+	project.selectProject(req, res, next);
+	var fileID = req.body.file;
+	
+	var command = 'git reset HEAD .'+fileID;
+	child_process.exec(command,{
+		timeout: 30000,
+		cwd: res.locals.project.basePath
+	},function(err,stdout,stderr){
+		res.json(200,{
+			success: true,
+			file: req.body.file,
+			command: command,
+			stdout: stdout,
+			stderr: stderr
+		});
+	})
+}
+
+
 
 
 
@@ -276,6 +296,7 @@ exports.initRoute=function(app){
 	app.post("/:project/git/add",add);
 	app.post("/:project/git/rm",rm);
 	app.post("/:project/git/commit",commit);
+	app.post("/:project/git/reset",reset);
 	app.post("/:project/git/push",push);
 	app.post("/:project/git/pushtags",pushtags);
 	app.post("/:project/git/tag",tag);

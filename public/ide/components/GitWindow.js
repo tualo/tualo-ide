@@ -43,6 +43,9 @@ Ext.define('Ext.tualo.ide.components.GitWindow', {
 			if (operation=='add'){
 				scope.git.add('/'+records[index].get('file'));
 			}
+			if (operation=='reset'){
+				scope.git.reset('/'+records[index].get('file'));
+			}
 			if (operation=='commit'){
 				var fn_list = '';
 				while(scope.operateProgressIndex<records.length){
@@ -200,6 +203,14 @@ Ext.define('Ext.tualo.ide.components.GitWindow', {
 				}
 			],
 			bbar:[
+				{
+					text: scope.dictionary.get('git.grid.reset.selectedFiles'),
+					scope: scope,
+					handler: function(btn){
+						var scope=this;
+						scope.operate('reset',scope.staged.getSelectionModel().getSelection(),0);
+					}
+				},
 				'->',
 				{
 					text: scope.dictionary.get('git.grid.commit.selectedFiles'),

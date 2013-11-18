@@ -179,7 +179,7 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 								scope.fireEvent('gitStatus',fileName);
 							}
 						}
-					},'-',
+					}/*,'-',
 					{
 						text: scope.dictionary.get('gitAdd'),
 						scope: scope,
@@ -266,7 +266,7 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 							}
 						}
 					}
-					,'-',
+					*/,'-',
 					{
 						text: scope.dictionary.get('gitIgnore'),
 						scope: scope,
