@@ -4,3 +4,4 @@
 .DS_Store
 routes/to_ignore.js
 /public/codemirror.old
+/qtapp
