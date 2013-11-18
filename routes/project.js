@@ -62,8 +62,6 @@ var loadProjectConfig = function(){
 var selectProject = function(req, res, next){
 	var p = req.url.split('/');
 	var requested_project = p[1];
-	console.log(req.url);
-	console.log(requested_project);
 	if (typeof requested_project!=='undefined'){
 		for(var i in project_configuration){
 			if (requested_project==project_configuration[i].name){
