@@ -35,6 +35,7 @@ var saveProjectConfig = function(project){
 		}
 	}
 }
+
 var loadProjectConfig = function(){
 	if (typeof config.project_file!='undefined'){
 		try{
@@ -57,21 +58,27 @@ var loadProjectConfig = function(){
 		}
 	}
 }
-var selectProject = function(req, res, next){
-    if (typeof req.params.project!=='undefined'){
-        for(var i in project_configuration){
-            if (req.params.project==project_configuration[i].name){
-                res.locals.project = project_configuration[i];
-                break;
-            }
-        }
-    }
 
+var selectProject = function(req, res, next){
+	var p = req.url.split('/');
+	var requested_project = p[1];
+	console.log(req.url);
+	console.log(requested_project);
+	if (typeof requested_project!=='undefined'){
+		for(var i in project_configuration){
+			if (requested_project==project_configuration[i].name){
+				res.locals.project = project_configuration[i];
+				break;
+			}
+		}
+	}
+	next();
 }
 
 var getProjects = function(){
 	return project_configuration;
 }
+
 var list = function(req, res, next)  {
 	var projects = getProjects();
 	var output = [];
@@ -146,8 +153,12 @@ var form = function(req, res, next)  {
 
 exports.getProjects = getProjects;
 exports.selectProject = selectProject;
+
+
 exports.initRoute=function(app){
 	startDirectory = app.startDirectory;
+	app.projects = project_configuration;
+	app.use(selectProject);
 	app.get("/projects/list",list);
 	app.post("/projects/form",form);
 	loadProjectConfig();

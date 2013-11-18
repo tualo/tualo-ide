@@ -11,12 +11,11 @@
 var child_process = require('child_process');
 var path = require('path');
 var fs = require('fs');
-var project = require('./project');
 
 
 
 var ignore = function(req, res, next) {
-	project.selectProject(req, res, next);
+	
 	var fileID = req.body.file;
 	fs.readFile(path.join(res.locals.project.basePath,'.gitignore'), function (err, data) {
 		if (err){
@@ -46,7 +45,6 @@ var ignore = function(req, res, next) {
 }
 
 var push = function(req, res, next) {
-	project.selectProject(req, res, next);
 	//var fileID = req.body.file.substring(1);
 	var command = 'git push';
 	child_process.exec(command,{
@@ -62,7 +60,6 @@ var push = function(req, res, next) {
 
 
 var pushtags = function(req, res, next) {
-	project.selectProject(req, res, next);
 	//var fileID = req.body.file.substring(1);
 	var command = 'git push --tags';
 	child_process.exec(command,{
@@ -80,7 +77,6 @@ var pushtags = function(req, res, next) {
 
 
 var add = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	
 	var command = 'git add .'+fileID;
@@ -96,7 +92,6 @@ var add = function(req, res, next) {
 }
 
 var reset = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	
 	var command = 'git reset HEAD .'+fileID;
@@ -119,7 +114,6 @@ var reset = function(req, res, next) {
 
 
 var rm = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	
 	var fileList = fileID.split(' ');
@@ -145,7 +139,6 @@ var rm = function(req, res, next) {
 
 
 var commit = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	
 	var fileList = fileID.split(' ');
@@ -171,7 +164,6 @@ var commit = function(req, res, next) {
 }
 
 var tag = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file.substring(1);
 	var tag = req.body.tag.replace(/\n/gm,' ').replace(/"/g,'*').replace(/\s/g,'-');
 	var message = req.body.message.replace(/\n/gm,' ').replace(/"/g,'*');
@@ -190,7 +182,6 @@ var tag = function(req, res, next) {
 
 
 var status = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file.substring(1);
 	var command = 'git status';
 	_status(res.locals.project.basePath,fileID,function(err,gitStatus){

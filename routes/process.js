@@ -4,7 +4,6 @@
  * Date: 2013-04-22
  */
 var file = require('./file');
-var project = require('./project');
 var process = require('child_process');
 
 var running_processes = {};
@@ -15,9 +14,7 @@ var io = null;
 var startProcess= function(project,data,socket){
 	var running_process = running_processes[project.name];
 	
-	console.log(project.process.cmd);
-	console.log(project.process.params);
-	
+	 
 	if (running_process != null){
 		process_restart[project.name]=true;
 		running_process.kill();
@@ -132,8 +129,8 @@ var initSocketForProject= function(project){
 exports.initRoute=function(app){
 	io = require('socket.io').listen(app.server);
 	io.set('log level',1); // show only warnings
-	var projects = project.getProjects();
-	for(var i in projects){
+	//var projects = project.getProjects();
+	for(var i in app.projects){
 		initSocketForProject(projects[i]);
 	}
 }

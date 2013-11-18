@@ -8,12 +8,10 @@
 var fs = require('fs');
 var path = require('path');
 var config = require('../config/server').config;
-var project = require('./project');
 var git = require('./git');
 var jsDiff = require('diff');
 
 var open = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	var fileParts = fileID.split('/');
 	var lastPart = fileParts[fileParts.length-1];
@@ -43,7 +41,6 @@ var open = function(req, res, next) {
 }
 
 var stat = function(req, res, next){
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	if (fileID.substr(0,1)=='/'){
 		fileID = fileID.substr(1);
@@ -67,7 +64,6 @@ var stat = function(req, res, next){
 }
 
 var diff = function(req, res, next){
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	if (fileID.substr(0,1)=='/'){
 		fileID = fileID.substr(1);
@@ -105,7 +101,6 @@ var diff = function(req, res, next){
 }
 
 var save = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	if (fileID.substr(0,1)=='/'){
 		fileID = fileID.substr(1);
@@ -126,7 +121,6 @@ var save = function(req, res, next) {
 }
 
 var del = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	if (fileID.substr(0,1)=='/'){
 		fileID = fileID.substr(1);
@@ -152,7 +146,6 @@ var del = function(req, res, next) {
 }
 
 var delFolder = function(req, res, next) {
-	project.selectProject(req, res, next)
 	var fileID = req.body.folder;
 	if (fileID.substr(0,1)=='/'){
 		fileID = fileID.substr(1);
@@ -179,7 +172,6 @@ var delFolder = function(req, res, next) {
 
 
 var add = function(req, res, next) {
-	project.selectProject(req, res, next);
 	req.body.content="// Sample Text";
 	var fileID = req.body.file;
 	fs.exists(res.locals.project.basePath+fileID,function(exists){
@@ -196,7 +188,6 @@ var add = function(req, res, next) {
 }
 
 var addFolder = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.folder;
 	fs.exists(res.locals.project.basePath+fileID,function(exists){
 		if (exists===true){
@@ -226,7 +217,6 @@ var addFolder = function(req, res, next) {
 }
 
 var listGet = function(req, res, next)  {
-	project.selectProject(req, res, next);
 	if (typeof req.query!=='undefined'){
 		//console.log(1);
 		if (typeof req.query.node!=='root'){
@@ -316,7 +306,6 @@ var inFileArray = function(gitStatusA,file,useIndexOf){
 	return false;
 }
 var list = function(req, res, next)  {
-	project.selectProject(req, res, next);
 	var pathID = req.body.path;
 	if (pathID==='root'){
 		pathID='';

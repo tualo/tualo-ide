@@ -23,7 +23,7 @@ var os = require('os');
 var fs = require('fs');
 var file = require('./file');
 var config = require('../config/server').config;
-var project = require('./project');
+
 var UglifyJS = require("uglify-js");
 var child_process = require('child_process');
 
@@ -31,7 +31,7 @@ var child_process = require('child_process');
 * uses uglify js beautify function
 */
 var beautify = function(req, res, next){
-	project.selectProject(req, res, next);
+	
 	var fileID = req.body.file;
 	if (fileID.substr(0,1)=='/'){
 		fileID = fileID.substr(1);
@@ -72,7 +72,6 @@ var beautify = function(req, res, next){
 }
 
 var check = function(req, res, next) {
-	project.selectProject(req, res, next);
 	var fileID = req.body.file;
 	if (fileID.substr(0,1)=='/'){
 		fileID = fileID.substr(1);
