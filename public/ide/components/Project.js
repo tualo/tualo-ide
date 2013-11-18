@@ -486,10 +486,25 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				cf=i;
 			}
 		}
+		/*
 		if (cf!=-1){
 			scope.center.setActiveTab(cf);
 		}
+		*/
+		Ext.defer(scope._restoreCurrentStateReTap,500,this,[0,files.length,cf]);
 		scope.tree.restore(Ext.JSON.decode(localStorage.getItem(scope.projectID+"_treeState")));
+	},
+	_restoreCurrentStateReTap: function(index,max,cf){
+		var scope = this;
+		if (index<max){
+			scope.center.setActiveTab(index);
+			index++;
+			Ext.defer(scope._restoreCurrentStateReTap,500,this,[index,max,cf]);
+		}else{
+			if (cf!=-1){
+				scope.center.setActiveTab(cf);
+			}
+		}
 	},
 	// execution only delayed, for saving resources
 	storeCurrentState: function(delayed){
