@@ -12,24 +12,40 @@ Requirements
 Installation
 ============
 
-If you have installed git:
+	npm install tualo-ide -g
 
-	git clone git://github.com/tualo/tualo-ide.git
-	cd tualo-ide
-	npm update
+Configuration
+=============
 
-If you don't have installed git download and unzip https://github.com/tualo/tualo-ide/archive/v0.0.3-alpha2.zip and run:
+A sample configuration file can be found in config in the module directory. 
+At the startup tualo-ide searches for a configuration file. This is the search order:
 
-	npm update
+* /etc/tualo-ide/config.json
+* [module-directory]/config/config.json
 
-In the ./config/server.js you can set up the port where the server is listen.
+The configuration is a JSON-File. The following entries are required in that file:
+
+* project_file The file where to put the project configurations
+* host The hostname or IP-Address where the service should listen
+* port The port where the service should listen
+* project_cookie_name The cookie name
+* auth_cookie_name The authentication cookie name
+* session_secret A secret string for cookie encryption
 
 Running
 =======
 
 You can start the service with:
 
-	node app.js
+	tualo-ide start
 
-After the service is started successfully open the browser and browse to http://localhost:8085/.
+Stoping the service simply call:
+
+	tualo-ide stop
+
+You also can run the service as single instance:
+
+	tualo-ide
+
+After the service is started successfully open the browser and browse to http://<your host>:<your port>/.
 

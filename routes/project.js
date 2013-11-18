@@ -10,7 +10,7 @@
  */
 
 
-var config = require('../config/server').config;
+var config;
 var pathExtra = require('path-extra');
 
 var project_configuration = {};
@@ -155,6 +155,7 @@ exports.selectProject = selectProject;
 
 exports.initRoute=function(app){
 	startDirectory = app.startDirectory;
+	config = app.configFile;
 	app.projects = project_configuration;
 	app.use(selectProject);
 	app.get("/projects/list",list);

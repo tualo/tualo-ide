@@ -1,0 +1,8 @@
+{
+	"project_file": "~/tualo-ide.json",
+	"session_secret": "please set",
+	"auth_cookie_name": "tualo-ide",
+	"project_cookie_name": "project",
+	"host": "localhost",
+	"port": 8085
+}

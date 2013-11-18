@@ -4,8 +4,6 @@
  * Date: 2013-04-22
  */
 
-var config = require('../config/server').config;
-//var project = require('./project');
 
 var indexUI = function(req, res, next) {
 	res.render('layout',{

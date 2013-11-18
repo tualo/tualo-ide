@@ -22,7 +22,6 @@
 var os = require('os');
 var fs = require('fs');
 var file = require('./file');
-var config = require('../config/server').config;
 
 var UglifyJS = require("uglify-js");
 var child_process = require('child_process');

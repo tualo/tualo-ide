@@ -7,7 +7,6 @@
 
 var fs = require('fs');
 var path = require('path');
-var config = require('../config/server').config;
 var git = require('./git');
 var jsDiff = require('diff');
 
