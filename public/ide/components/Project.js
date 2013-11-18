@@ -190,6 +190,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				}
 		});
 		
+		if (false)
 		buttons.push({
 			text: scope.dictionary.get('buttonBeautify'),
 			glyph: 0xf0c7,

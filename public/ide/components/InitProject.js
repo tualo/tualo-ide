@@ -188,6 +188,7 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 		scope.overview = Ext.create('Ext.panel.Panel',{
 			region: 'center',
 			layout: 'card',
+			border: false,
 			items:[
 				scope.defaultProjectForm
 			]
@@ -199,7 +200,7 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 			title: 'tualo IDE',
 			layout: {
 				type: 'border',
-				padding: 5
+				padding: 0
 			},
 			items: [scope.treePanel,scope.overview]
 		});
@@ -228,16 +229,27 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 										'titlebar=no'
 									].join(','));
 		}else{
-			var project = Ext.create('Ext.tualo.ide.components.Project', {
-				title: title,
-				closable: true,
-				closeAction: 'destroy',
-				projectID: id, // is set by layout.jade layout,
-				projectTitle: title,
-				projectConfig: {},
-				dictionary: scope.dictionary
-			});
-			scope.ptreepanel.add(project);
+			var tabs = scope.ptreepanel.items.getRange();
+			var project;
+			for(var i = 0; i<tabs.length; i++){
+				if (id==tabs[i].projectID){
+					project = tabs[i];
+					break;
+				}
+			}
+			if (typeof project=='undefined'){
+				project = Ext.create('Ext.tualo.ide.components.Project', {
+					title: title,
+					closable: true,
+					border: false,
+					closeAction: 'destroy',
+					projectID: id, // is set by layout.jade layout,
+					projectTitle: title,
+					projectConfig: {},
+					dictionary: scope.dictionary
+				});
+				scope.ptreepanel.add(project);
+			}
 			scope.ptreepanel.setActiveTab(project);
 		}
 	}
