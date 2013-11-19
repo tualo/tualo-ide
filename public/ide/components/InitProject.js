@@ -195,7 +195,7 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 		});
 		
 		
-
+		
 		var p = Ext.create('Ext.panel.Panel',{
 			title: 'tualo IDE',
 			layout: {
@@ -215,6 +215,14 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 		
 		scope.callParent(arguments);
 		
+		window.addEventListener("focus", function(event) {
+			if (scope.openProjectInNewWindow===false){
+				if (typeof scope.ptreepanel.getActiveTab().focus=='function'){
+					scope.ptreepanel.getActiveTab().focus();
+				}
+			}
+		});
+		
 	},
 	openProjectInNewWindow: false,
 	openProject: function(id,title){
@@ -229,6 +237,9 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 										'titlebar=no'
 									].join(','));
 		}else{
+			
+			
+			
 			var tabs = scope.ptreepanel.items.getRange();
 			var project;
 			for(var i = 0; i<tabs.length; i++){
@@ -238,19 +249,41 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 				}
 			}
 			if (typeof project=='undefined'){
-				project = Ext.create('Ext.tualo.ide.components.Project', {
-					title: title,
-					closable: true,
-					border: false,
-					closeAction: 'destroy',
-					projectID: id, // is set by layout.jade layout,
-					projectTitle: title,
-					projectConfig: {},
-					dictionary: scope.dictionary
+				Ext.Ajax.request({
+					url: '/projects/info',
+					params: {
+						id: id
+					},
+					success: function(response){
+						var text = response.responseText;
+						var o = Ext.JSON.decode(text);
+						if (o.success){
+						project = Ext.create('Ext.tualo.ide.components.Project', {
+							title: o.title,
+							inSingleWindow: false,
+							closable: true,
+							border: false,
+							closeAction: 'destroy',
+							projectID: o.name,
+							projectTitle: o.title,
+							projectConfig: o,
+							dictionary: scope.dictionary
+						});
+						scope.ptreepanel.add(project);
+						scope.ptreepanel.setActiveTab(project);
+						}else{
+							alert('An ungly Error occured!');
+						}
+					},
+					failure: function(){
+						alert('An ungly Error occured!');
+					}
 				});
-				scope.ptreepanel.add(project);
+				
+			}else{
+				scope.ptreepanel.setActiveTab(project);
 			}
-			scope.ptreepanel.setActiveTab(project);
+			
 		}
 	}
 });

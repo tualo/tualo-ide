@@ -24,7 +24,7 @@ var app;
 var io;
 
 function initServer(){
-	var cookieParser = express.cookieParser(config.session_secret);
+	var cookieParser = express.cookieParser();
 	var sessionStore = express.session({ secret: config.session_secret});
 	app = express();
 	app.configFile = config;
@@ -32,7 +32,8 @@ function initServer(){
 		app.set('port', config.port);
 		app.set('views', __dirname + '/views');
 		app.set('view engine', 'jade');
-		app.use(express.bodyParser());
+		app.use(express.json());
+		app.use(express.urlencoded());
 		app.use(cookieParser);
 		app.use(sessionStore);
 		app.use(express.static(path.join(__dirname, 'public')));
@@ -40,25 +41,29 @@ function initServer(){
 		
 		
 	});
+	app.set('startDirectory',__dirname); // make the baseDir accessible the project-route(s)
 	
 	
 	
 	var server = http.createServer(app);
+	
+	io = require('socket.io').listen(server);
+	
+	io.set('log level',3); // show only warnings
+	var sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
+	app.set('io',io);
+	app.set('sessionIO',sessionSockets);
+	
+	
+	for(var i in routes){
+		require('./routes/'+routes[i]).initRoute(app);
+	}
+	
 	server.listen(app.get('port'), function(){
 		console.log("tualo - IDE - Server listening on port " + app.get('port'));
 	});
 
-	var sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
-	io = socketIO.listen(app.server);
-	io.set('log level',1); // show only warnings
 	
-	app.set('io',io);
-	app.set('sessionIO',sessionSockets);
-	
-	app.set('startDirectory',__dirname); // make the baseDir accessible the project-route(s)
-	for(var i in routes){
-		require('./routes/'+routes[i]).initRoute(app);
-	}
 }
 
 function findConfiguration(){

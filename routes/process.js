@@ -111,28 +111,32 @@ var onProcessError = function (err){
 }
 
 var initSocketForProject= function(project){
-	var chat = io.of('/'+project.name+'/process').on('connection', function (err,socket,session) {
-		console.log(session);
+	
+	var chat = io.of('/'+project.name+'/process').on('connection', function (socket) {
+		//console.log(arguments);
+		//console.log(session);
 		
 		socket.on('start process',function(data){
-			startProcess(project,data,socket,session);
+			startProcess(project,data,socket);
 		});
 		
 		socket.on('stop process',function(data){
-			stopProcess(project,data,socket,session);
+			stopProcess(project,data,socket);
 		});
 		
 		socket.on('disconnect', function () {
-			stopProcess(project,null,socket,session);
+			stopProcess(project,null,socket);
 		});
 	});
 }
 
 exports.initRoute=function(app){
-	
-	
-	io = app.get('sessionIO');
-	for(var i in app.projects){
-		initSocketForProject(projects[i]);
+	io = app.get('io');
+	projects = app.get('projects');
+	projects.addAddedListener(initSocketForProject);
+	var projectsList = projects.getProjects();
+	for(var i in projectsList){
+		initSocketForProject(projectsList[i]);
 	}
+	
 }

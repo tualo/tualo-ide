@@ -24,6 +24,10 @@ Ext.define('Ext.tualo.ide.components.CodeMirror', {
 		this.callParent(arguments);
 		
 	},
+	focus: function(){
+		var scope=this;
+		scope.CodeMirror.focus();
+	},
 	save: function(){
 		var scope = this;
 		scope.fireEvent('saveRequest',scope)

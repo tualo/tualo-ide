@@ -11,6 +11,14 @@ Ext.define('Ext.tualo.ide.components.Project', {
 	],
 	projectID: 'none',
 	layout: 'fit',
+	inSingleWindow: true,
+	focus: function(){
+		//console.log('Doing refocus');
+		var scope = this;
+		var currentFile = scope.center.getActiveTab().fileId;
+		scope.files[currentFile].focus();
+		//scope.center.getActiveTab().focus();
+	},
 	constructor: function (config) {
 		this.projectID = config.projectID;
 		this.projectTitle = config.projectTitle;
@@ -307,6 +315,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				},
 				tabchange: function( tabPanel, newCard, oldCard, eOpts ){
 					var scope = this;
+					Ext.defer(scope.focus,100,scope);
 					scope.io.stat(newCard.fileId);
 				}
 			}
@@ -317,6 +326,9 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			split: true,
 			region: 'south',
 			height: 200,
+			projectID: scope.projectID,
+			projectTitle: scope.projectTitle,
+			projectConfig: scope.projectConfig,
 			dictionary: scope.dictionary
 		});
 		
@@ -342,6 +354,14 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		scope.callParent(arguments);
 		
 		scope.restoreCurrentState();
+		
+		
+		if (scope.inSingleWindow===true){
+			window.addEventListener("focus", function(event) {
+				scope.focus();
+		});
+		}
+		
 	},
 	addTab: function(fileObject){
 		var scope = this;

@@ -20,7 +20,8 @@ Ext.define('Ext.tualo.ide.components.Process', {
 		};
 		*/
 		scope.layout = 'fit';
-		scope.socket = io.connect(window.location.href+'/process');
+		scope.socket = io.connect(window.location.protocol+window.location.host+'/'+scope.projectID+'/'+'process');
+		console.log(window.location.protocol+window.location.host+'/'+scope.projectID+'/'+'process');
 		scope.socket.on('std',function(scope){
 			return function(data){
 				scope.setStdOutput(data,false)

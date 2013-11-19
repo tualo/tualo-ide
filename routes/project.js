@@ -16,6 +16,20 @@ var pathExtra = require('path-extra');
 var project_configuration = {};
 var fs = require('fs');
 var startDirectory = __dirname;
+var added_projects_listeners =[];
+
+var addAddedListener = function(callback){
+	added_projects_listeners.push(callback);
+}
+
+var notifyListeners = function(project){
+	for( var i  in added_projects_listeners){
+		try{
+			added_projects_listeners[i](project);
+		}catch(e){
+		}
+	}
+}
 
 var saveProjectConfig = function(project){
 	if (typeof config.project_file!='undefined'){
@@ -141,6 +155,7 @@ var form = function(req, res, next)  {
 			if (foundIndex!=-1){
 				projects[foundIndex] = item;
 			}else{
+				notifyListeners(item);
 				projects.push(item);
 			}
 			saveProjectConfig(projects);
@@ -149,16 +164,40 @@ var form = function(req, res, next)  {
 	res.json(200,output);
 }
 
+
+var info = function(req, res, next)  {
+	var projects = getProjects();
+	var output = {
+		success: false
+	};
+	if (typeof req.body.id!=='undefined'){
+		var name = req.body.id;
+		var foundIndex = -1;
+		for(var i in projects){
+			if (projects[i].name===name){
+				output = projects[i];
+				output.success = true;
+				foundIndex=i;
+			}
+		}
+	}
+	res.json(200,output);
+}
+
+
 exports.getProjects = getProjects;
 exports.selectProject = selectProject;
-
+exports.addAddedListener = addAddedListener;
 
 exports.initRoute=function(app){
 	startDirectory = app.startDirectory;
 	config = app.configFile;
-	app.projects = project_configuration;
+	
 	app.use(selectProject);
 	app.get("/projects/list",list);
 	app.post("/projects/form",form);
+	app.post("/projects/info",info);
 	loadProjectConfig();
+	
+	app.set('projects', this);
 }
