@@ -1,10 +1,14 @@
-// Sample Text
+
+
 .CodeMirror {
 	height: 100% !important;
 	width: 100% !important;
 }
 .cm-tab{
 	opacity: 0.5;
+}
+.cm-s-solarized .cm-comment .cm-tab{
+	font-style: normal !important;
 }
 
 .cm-matchhighlight{

@@ -2,6 +2,7 @@
 Ext.define('Ext.tualo.ide.components.Project', {
 	extend: 'Ext.panel.Panel',
 	requires: [
+		'Ext.tualo.ide.components.TabScroller',
 		'Ext.tualo.ide.components.ProjectTree',
 		'Ext.tualo.ide.components.IO',
 		'Ext.tualo.ide.components.GIT',
@@ -300,6 +301,13 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		
 		scope.center = Ext.create('Ext.tab.Panel', {
 			region: 'center',
+			/*
+			plugins: [{
+				ptype: 'idetabscrollermenu',
+				maxText  : 15,
+				pageSize : 5
+			}],
+			*/
 			items: [
 				
 			],
