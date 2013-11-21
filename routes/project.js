@@ -12,6 +12,7 @@
 
 var config;
 var pathExtra = require('path-extra');
+var fs = require('fs');
 
 var project_configuration = {};
 var fs = require('fs');
@@ -53,6 +54,7 @@ var saveProjectConfig = function(project){
 var loadProjectConfig = function(){
 	if (typeof config.project_file!='undefined'){
 		try{
+			
 			var file = config.project_file;
 			if (file.substring(0,1)=='~'){
 				file = file.replace('~',pathExtra.homedir());
@@ -61,6 +63,9 @@ var loadProjectConfig = function(){
 			}else{
 				file = startDirectory + '/' + file
 			}
+			
+			
+			
 			
 			if (fs.existsSync(file)===true){
 				project_configuration = JSON.parse(fs.readFileSync(file, 'utf8'));
@@ -106,6 +111,22 @@ var list = function(req, res, next)  {
 	res.json(200,output);
 }
 
+// not implemented yet
+// checks if a path is found, and writable
+var pathfound = function(req, res, next)  {
+	var projects = getProjects();
+	var output = {
+		success: false
+	};
+	fs.exists(req.body.path, function (exists) {
+		output.success = exists;
+		if (exists){
+			
+		}
+		res.json(200,output);
+	});
+}
+
 var form = function(req, res, next)  {
 	var projects = getProjects();
 	var output = {
@@ -137,11 +158,27 @@ var form = function(req, res, next)  {
 		
 		// save the form
 		if (typeof req.body.title!=='undefined'){
+			// append tailing slash if it's not set
+			if (req.body.basepath.substring(req.body.basepath.length-1)!='/'){
+				req.body.basepath+='/';
+			}
 			var item = {
 				name: req.body.name,
 				title: req.body.title,
 				basePath: req.body.basepath
 			}
+			
+			// create directory if it does not exists
+			fs.exists(item.basePath, function (exists) {
+				if (!exists){
+					
+					fs.mkdir(item.basePath,0777, function(){
+					
+					})
+				}
+			})
+			
+			
 			if (req.body.cmd!=''){
 				item.process = {
 					cmd: req.body.cmd
@@ -197,6 +234,7 @@ exports.initRoute=function(app){
 	app.get("/projects/list",list);
 	app.post("/projects/form",form);
 	app.post("/projects/info",info);
+	app.post("/projects/pathfound",pathfound);
 	loadProjectConfig();
 	
 	app.set('projects', this);
