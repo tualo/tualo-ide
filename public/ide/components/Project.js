@@ -373,15 +373,17 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		if (typeof scope.files[fileObject.id]==='undefined'){ // do not open a file twice
 			var edtTab = Ext.create('Ext.tualo.ide.components.CodeMirror', {
 				title: fileObject.name,
+				tabConfig: {
+					tooltip: fileObject.id
+				},
 				closable: true,
 				closeAction: 'destroy',
-				
+				toolTip: fileObject.id,
 				name: fileObject.name,
 				data: fileObject.data,
 				mode: fileObject.mode,
 				mtime: fileObject.mtime,
 				fileId: fileObject.id,
-				
 				listeners: {
 					scope: scope,
 					saveRequest: scope._saveRequest,
