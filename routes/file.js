@@ -25,7 +25,12 @@ var open = function(req, res, next) {
 		var stats = fs.lstatSync(res.locals.project.basePath+'/'+fileID);
 		var mode = getType(fileID);
 		if (mode==null){
-			mode = 'default';
+			if (data.toString().indexOf('#!/usr/bin/env node')===0){
+				mode = 'javascript';
+			}else{
+				mode = 'default';
+			}
+			
 		}
 		res.json(200,{
 			success: true,
@@ -231,7 +236,7 @@ var listGet = function(req, res, next)  {
 	
 	next();
 }
-var getType = function(filename){
+var getType = function(filename,callback){
 	var type = null;
 	var fileParts = filename.split('.');
 	var lastPart = fileParts[fileParts.length-1];
