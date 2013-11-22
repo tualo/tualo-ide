@@ -12,6 +12,9 @@ if (process.argv.length>2){
 	if (process.argv[2]=='stop'){
 		forever.stop('tualo-ide');
 	}
+	if (process.argv[2]=='restart'){
+		forever.restart('tualo-ide');
+	}
 }else{
 	// start as single program
 	forever.start(path.join(__dirname,'..','app.js'),{

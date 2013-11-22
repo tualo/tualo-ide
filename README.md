@@ -43,6 +43,10 @@ Stoping the service simply call:
 
 	tualo-ide stop
 
+For restarting the service simply call:
+
+	tualo-ide restart
+
 You also can run the service as single instance:
 
 	tualo-ide
