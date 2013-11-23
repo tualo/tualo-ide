@@ -15,6 +15,7 @@ var routes = ['project','sign','ui','file','syntax','process','git'];
 
 var config;
 var http = require('http');
+var https = require('https');
 var path = require('path');
 var fs = require('fs');
 var loggerLib = new require('./lib/logger');
@@ -26,10 +27,29 @@ var io;
 function initServer(){
 	var cookieParser = express.cookieParser();
 	var sessionStore = express.session({ secret: config.session_secret});
+	
+	var httpPort=8085;
+	var httpsPort=8086;
+	if ((typeof config.useHTTP=='undefined')&&(typeof config.useHTTPS=='undefined')){
+		config.useHTTP = true;
+		if (typeof config.port!='undefined'){
+			httpPort = config.port;
+		}
+	}
+
+	if (typeof config.useHTTPS=='undefined'){
+		config.useHTTPS=false;
+	}
+	if (typeof config.useHTTP=='undefined'){
+		config.useHTTP=false;
+	}
+	
+	
+	
 	app = express();
 	app.configFile = config;
 	app.configure(function(){
-		app.set('port', config.port);
+		//app.set('port', port);
 		app.set('views', __dirname + '/views');
 		app.set('view engine', 'jade');
 		app.use(express.json());
@@ -43,26 +63,47 @@ function initServer(){
 	});
 	app.set('startDirectory',__dirname); // make the baseDir accessible the project-route(s)
 	
+	if (config.useHTTPS){
+		httpsPort = config.httpsport;
+		var credentials = {};
+		if (typeof config.privateKey!='undefined'){
+			var privateKey  = fs.readFileSync(config.privateKey, 'utf8');
+			credentials.key = privateKey;
+		}
+		if (typeof config.certificate!='undefined'){
+			var certificate  = fs.readFileSync(config.certificate, 'utf8');
+			credentials.cert = certificate;
+		}
+		if (typeof config.ca!='undefined'){
+			var ca  = fs.readFileSync(config.ca, 'utf8');
+			credentials.ca = ca;
+		}
+		//{key: privateKey, cert: certificate};
+		var httpsServer = https.createServer(credentials, app);
+	}
 	
-	
-	var server = http.createServer(app);
-	
-	io = require('socket.io').listen(server);
-	
-	io.set('log level',3); // show only warnings
-	var sessionSockets = new SessionSockets(io, sessionStore, cookieParser);
+	if (config.useHTTP){
+		var httpServer = http.createServer(app);
+		io = require('socket.io').listen(httpServer);
+	}
+	io.set('log level',1); // show only warnings
 	app.set('io',io);
-	app.set('sessionIO',sessionSockets);
 	
 	
 	for(var i in routes){
 		require('./routes/'+routes[i]).initRoute(app);
 	}
 	
-	server.listen(app.get('port'), function(){
-		console.log("tualo - IDE - Server listening on port " + app.get('port'));
-	});
-
+	if (config.useHTTP){
+		httpServer.listen(httpPort, function(){
+			console.log("tualo - IDE - Server listening on port " + httpPort);
+		});
+	}
+	if (config.useHTTPS){
+		httpsServer.listen(httpsPort, function(){
+			console.log("tualo - IDE - Server listening on port " + httpsPort);
+		});
+	}
 	
 }
 
