@@ -99,14 +99,52 @@ var getProjects = function(){
 var list = function(req, res, next)  {
 	var projects = getProjects();
 	var output = [];
-	for(var i in projects){
-		var entry = {
-			id: projects[i].name,
-			text: projects[i].title,
-			type: projects[i].type?projects[i].type:'unkown',
-			leaf: true
+	//console.log(req);
+	if (req.query.node==''){
+		var groupHash = {};
+		for(var i in projects){
+			if (typeof projects[i].group!='undefined'){
+				if (typeof groupHash[projects[i].group]=='undefined'){
+					groupHash[projects[i].group]=output.length;
+					var entry = {
+						id: 'grp-'+projects[i].group,
+						text: projects[i].group,
+						type: 'group',
+						expanded: true
+					};
+					output.push(entry);
+				}else{
+					/*
+				output[groupHash[projects[i].group]]['children'].push({
+					id: projects[i].name,
+					text: projects[i].title,
+					type: projects[i].type?projects[i].type:'unkown',
+					leaf: true
+				})
+				*/
+				}
+			}else{
+				var entry = {
+					id: projects[i].name,
+					text: projects[i].title,
+					type: projects[i].type?projects[i].type:'unkown',
+					leaf: true
+				}
+				output.push(entry);
+			}
 		}
-		output.push(entry);
+	}else{
+		for(var i in projects){
+			if ('grp-'+projects[i].group==req.query.node){
+				var entry = {
+					id: projects[i].name,
+					text: projects[i].title,
+					type: projects[i].type?projects[i].type:'unkown',
+					leaf: true
+				}
+				output.push(entry);
+			}
+		}
 	}
 	res.json(200,output);
 }
@@ -144,7 +182,8 @@ var form = function(req, res, next)  {
 					data:{
 						name: projects[i].name,
 						title: projects[i].title,
-						basepath: projects[i].basePath
+						basepath: projects[i].basePath,
+						group: (projects[i].group)?projects[i].group:''
 					},
 					success: true
 				};
@@ -165,7 +204,8 @@ var form = function(req, res, next)  {
 			var item = {
 				name: req.body.name,
 				title: req.body.title,
-				basePath: req.body.basepath
+				basePath: req.body.basepath,
+				group: req.body.group
 			}
 			
 			// create directory if it does not exists

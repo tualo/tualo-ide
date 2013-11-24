@@ -27,7 +27,7 @@
 	"errorOutputTitle": "Process Errors",
 	"stopProcess": "stop running Process",
 	
-	"ProjectsTreeTitle": "configured Projects",
+	"ProjectsTreeTitle": "Projects",
 	
 	"newDefaultProjectTitle": "New project",
 	"formProjectTitle": "Title",
@@ -35,6 +35,7 @@
 	"formProjectBasePath": "Path",
 	"formProjectProcessCommand": "Command",
 	"formProjectProcessCommandArgument": "Arguments",
+	"formProjectProcessGroup": "Group",
 	"formProjectNameInvalid": "Only letters a-Z, numbers, dots and hyphens are allowed",
 	
 	"formProjectSaveNew": "Create",

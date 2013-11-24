@@ -90,6 +90,7 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 				scope: scope,
 				itemclick: function( scope, record, item, index, e, eOpts ){
 					var scope = this;
+					if(record.isLeaf()){
 					if (record.get('id')!==''){
 						scope.defaultProjectForm.getForm().load({
 							params: {
@@ -99,10 +100,13 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 						scope.defaultProjectForm.setTitle(record.get('text'));
 						Ext.getCmp('save-'+scope.xid).setText(scope.dictionary.get('formProjectSaveBtn'));
 					}
+					}
 				},
 				itemdblclick: function( me, record, item, index, e, eOpts ){
+					if(record.isLeaf()){
 					if (record.get('id')!==''){
 						scope.openProject(record.get('id'),record.get('text'));
+					}
 					}
 				},
 				itemcontextmenu: function( tPanel, record, item, index, e, eOpts ){
@@ -145,6 +149,10 @@ Ext.define('Ext.tualo.ide.components.InitProject', {
 			},{
 				fieldLabel: scope.dictionary.get('formProjectProcessCommandArgument'),
 				name: 'arg',
+				allowBlank: true
+			},{
+				fieldLabel: scope.dictionary.get('formProjectProcessGroup'),
+				name: 'group',
 				allowBlank: true
 			}],
 			buttons:[
