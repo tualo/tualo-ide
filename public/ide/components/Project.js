@@ -8,7 +8,13 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		'Ext.tualo.ide.components.GIT',
 		'Ext.tualo.ide.components.CodeMirror',
 		'Ext.tualo.ide.components.Process',
-		'Ext.tualo.ide.components.GitWindow'
+		'Ext.tualo.ide.components.GitWindow',
+		'Ext.tualo.ide.components.SearchField',
+		'Ext.view.View',
+		'Ext.layout.container.Fit',
+		'Ext.toolbar.Paging',
+		'Ext.XTemplate',
+		'Ext.data.Store'
 	],
 	projectID: 'none',
 	layout: 'fit',
@@ -186,6 +192,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		});
 		
 		
+		
 		var buttons = [];
 		buttons.push({
 			text: scope.dictionary.get('buttonSave'),
@@ -236,13 +243,81 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			items: buttons
 		});
 		
+		scope.filefindModelID = Ext.id();
+		Ext.define(scope.filefindModelID, {
+			extend: 'Ext.data.Model',
+			idProperty: 'longfilename',
+			fields: [
+				{name: 'shortfilename'},
+				{name: 'longfilename'}
+			]
+		});
+		
+		scope.filefindStore = Ext.create('Ext.data.Store', {
+			model: scope.filefindModelID,
+			proxy: {
+				type: 'ajax',
+				url: '/'+scope.projectID+'/file/find',
+				reader: {
+					type: 'json',
+					root: 'list',
+					totalProperty: 'totalCount'
+				}
+			},
+			listeners: {
+				beforeload: function(){
+					
+					var params = scope.filefindStore.getProxy().extraParams;
+					if (params.query) {
+						delete params.forumId;
+					} else {
+						params.forumId = 'xyz';// forumId;
+					}
+					
+				}
+			}
+		});
+		
+		var resultTpl = Ext.create('Ext.XTemplate',
+			'<tpl for=".">',
+			'<div class="search-item">',
+															 '<h3>{shortfilename}</h3>',
+															 '<p>{longfilename}</p>',
+			'</div></tpl>',
+			{
+				formatDate: function(value){
+					return Ext.Date.format(value, 'M j, Y');
+				}
+		});
+		
+		scope.filefindPanel = Ext.create('Ext.panel.Panel', {
+			region: 'north',
+			layout: 'fit',
+			items: {
+				overflowY: 'auto',
+				xtype: 'dataview',
+				tpl: resultTpl,
+				store: scope.filefindStore,
+				itemSelector: 'div.search-item',
+				emptyText: '<div class="x-grid-empty">No Matching Files</div>'
+			},
+			dockedItems: [{
+				dock: 'bottom',
+				xtype: 'pagingtoolbar',
+				store: scope.filefindStore,
+				pageSize: 25,
+				displayInfo: true,
+				displayMsg: 'Files {0} - {1} of {2}',
+				emptyMsg: 'No files to display'
+			}]
+		});
+		
 		scope.tree = Ext.create('Ext.tualo.ide.components.ProjectTree', {
 			projectID: scope.projectID,
 			projectTitle: scope.projectTitle,
 			dictionary: scope.dictionary,
-			region: 'west',
-			width: 300,
-			split: true,
+			region: 'center',
+			
 			listeners: {
 				scope: scope,
 				filedblclick: function(config){
@@ -299,6 +374,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			}
 		});
 		
+		
 		scope.center = Ext.create('Ext.tab.Panel', {
 			region: 'center',
 			/*
@@ -349,13 +425,39 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			},
 			items: [scope.center,scope.process]
 		})
-		
+		scope.searchfieldID = Ext.id();
+		scope.treeWrapper = Ext.create('Ext.panel.Panel',{
+			title: scope.projectTitle,
+			region: 'west',
+			width: 300,
+			split: true,
+			layout: 'card',
+			dockedItems: [{
+				dock: 'top',
+				xtype: 'toolbar',
+				items: {
+					xtype: 'searchfield',
+					id: scope.searchfieldID,
+					store: scope.filefindStore
+				}
+			}],
+			items: [scope.tree,scope.filefindPanel],
+			listeners:{
+				scope: scope,
+				resize: function(t,w,h){
+					Ext.getCmp(scope.searchfieldID).setWidth(Ext.getCmp(scope.searchfieldID).getEl().parent().getWidth()-5);
+				},
+				boxready: function(t,w,h){
+					Ext.getCmp(scope.searchfieldID).setWidth(Ext.getCmp(scope.searchfieldID).getEl().parent().getWidth()-5);
+				}
+			}
+		})
 		scope.wrapper = Ext.create('Ext.panel.Panel',{
 			layout: {
 				type: 'border',
 				padding: 5
 			},
-			items: [scope.tree,scope.centerWrapper]
+			items: [scope.treeWrapper,scope.centerWrapper]
 		})
 		scope.items = scope.wrapper;
 		scope.wrapper.addDocked(scope.toolbar);

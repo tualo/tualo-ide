@@ -340,7 +340,7 @@ Ext.define('Ext.tualo.ide.components.ProjectTree', {
 		})
 		
 		scope.treePanel = Ext.create('Ext.tree.Panel', {
-			title: scope.projectTitle,
+			hideHeaders: true,
 			store: store,
 			rootVisible: true,
 			root: {

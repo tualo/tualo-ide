@@ -174,6 +174,15 @@ var delFolder = function(req, res, next) {
 	
 }
 
+var find = function(req, res, next){
+	console.log(req.body.query);
+	console.log(req.param.query);
+	res.json(200,{
+		success: true,
+		totalCount: 0,
+		data:[]
+	});
+}
 
 var add = function(req, res, next) {
 	req.body.content="// Sample Text";
@@ -392,6 +401,8 @@ exports.initRoute=function(app){
 	app.post("/:project/file/del",del);
 	app.post("/:project/file/delFolder",delFolder);
 	app.post("/:project/file/list",list);
+
+	app.post("/:project/file/find",find);
 
 	app.get("/:project/file/list",listGet);
 }
