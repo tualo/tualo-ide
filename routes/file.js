@@ -174,14 +174,66 @@ var delFolder = function(req, res, next) {
 	
 }
 
-var find = function(req, res, next){
-	console.log(req.body.query);
-	console.log(req.param.query);
-	res.json(200,{
-		success: true,
-		totalCount: 0,
-		data:[]
+var exec = require('child_process').exec;
+
+var createFind = function() {
+	return new findCmd();
+};
+
+var findCmd = function() {
+	this.options = [];
+	this.command = 'find';
+};
+
+findCmd.prototype.args = function(opt) {
+	this.options.push(opt);
+	return this;
+}
+
+findCmd.prototype.exec = function(callback) {
+	var self = this;
+	var args = this.options.join(' ');
+	var child = exec(this.command + ' '+ args  + ' ', function(err, stdout, stderr) {
+		child.kill('SIGHUP');
+		callback(err, stdout, stderr);
 	});
+};
+
+
+var find = function(req, res, next){
+	if ((req.query)&&(req.query.query)){
+		var findfile = createFind();
+		findfile.args('-P')
+		.args(res.locals.project.basePath)
+		.args('-name')
+		.args('"'+req.query.query+'"')
+		.exec(function(err,out,_e){
+			var lines = out.split("\n");
+			var output = [];
+			for(var i in lines){
+				var item = {
+					shortfilename: path.basename(lines[i]),
+					longfilename: lines[i].substring(res.locals.project.basePath.length),
+					type: getType(path.basename(lines[i]))
+				}
+				output.push(item);
+				
+				
+			};
+			
+			res.json(200,{
+				success: true,
+				totalCount:lines.length,
+				data: output
+			});
+		})
+	}else{
+		res.json(200,{
+			success: true,
+			totalCount: 0,
+			data:[]
+		});
+	}
 }
 
 var add = function(req, res, next) {
@@ -403,6 +455,7 @@ exports.initRoute=function(app){
 	app.post("/:project/file/list",list);
 
 	app.post("/:project/file/find",find);
+	app.get("/:project/file/find",find);
 
 	app.get("/:project/file/list",listGet);
 }

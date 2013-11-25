@@ -232,7 +232,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				handler: function(){
 					var scope = this;
 					var processPanel = scope.process;
-					console.log('start');
+					
 					processPanel.startProcess();
 				}
 			});
@@ -249,9 +249,11 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			idProperty: 'longfilename',
 			fields: [
 				{name: 'shortfilename'},
-				{name: 'longfilename'}
+				{name: 'longfilename'},
+				{name: 'type'}
 			]
 		});
+		
 		
 		scope.filefindStore = Ext.create('Ext.data.Store', {
 			model: scope.filefindModelID,
@@ -260,29 +262,24 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				url: '/'+scope.projectID+'/file/find',
 				reader: {
 					type: 'json',
-					root: 'list',
+					root: 'data',
 					totalProperty: 'totalCount'
 				}
 			},
 			listeners: {
 				beforeload: function(){
 					
-					var params = scope.filefindStore.getProxy().extraParams;
-					if (params.query) {
-						delete params.forumId;
-					} else {
-						params.forumId = 'xyz';// forumId;
-					}
 					
+				},
+				load: function(){
+					scope.treeWrapper.getLayout().setActiveItem(scope.filefindPanel);
 				}
 			}
 		});
 		
 		var resultTpl = Ext.create('Ext.XTemplate',
 			'<tpl for=".">',
-			'<div class="search-item">',
-															 '<h3>{shortfilename}</h3>',
-															 '<p>{longfilename}</p>',
+			'<div class="search-item">','<h3>{shortfilename}</h3>','{longfilename}',
 			'</div></tpl>',
 			{
 				formatDate: function(value){
@@ -298,8 +295,19 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				xtype: 'dataview',
 				tpl: resultTpl,
 				store: scope.filefindStore,
+				overItemCls: 'search-item-over',
 				itemSelector: 'div.search-item',
-				emptyText: '<div class="x-grid-empty">No Matching Files</div>'
+				emptyText: '<div class="x-grid-empty">No Matching Files</div>',
+				listeners:{
+					scope: scope,
+					itemdblclick: function( t, record, item, index, e, eOpts ){
+						scope.tree.fireEvent( 'filedblclick', {
+							type: record.get('type'),
+							id: record.get('longfilename'),
+							name: record.get('shortfilename')
+						}) 
+					}
+				}
 			},
 			dockedItems: [{
 				dock: 'bottom',
