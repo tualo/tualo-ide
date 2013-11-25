@@ -32,7 +32,7 @@ Ext.define('Ext.tualo.ide.components.SearchField', {
 		me.store.proxy.encodeFilters = function(filters) {
 			return filters[0].value;
 		}
-		},
+	},
 	
 	afterRender: function(){
 		this.callParent();

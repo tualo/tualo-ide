@@ -2,6 +2,7 @@
 Ext.define('Ext.tualo.ide.components.Project', {
 	extend: 'Ext.panel.Panel',
 	requires: [
+		
 		'Ext.tualo.ide.components.TabScroller',
 		'Ext.tualo.ide.components.ProjectTree',
 		'Ext.tualo.ide.components.IO',
@@ -446,7 +447,24 @@ Ext.define('Ext.tualo.ide.components.Project', {
 				items: {
 					xtype: 'searchfield',
 					id: scope.searchfieldID,
-					store: scope.filefindStore
+					store: scope.filefindStore,
+					onTrigger1Click: function(){
+						scope.treeWrapper.getLayout().setActiveItem(scope.tree);
+						/*
+						var me = Ext.getCmp(scope.searchfieldID);
+						
+						if (me.hasSearch) {
+							me.setValue('');
+							me.store.clearFilter();
+							
+							me.hasSearch = false;
+							me.triggerCell.item(0).setDisplayed(false);
+							
+							me.updateLayout();
+							
+						}
+						*/
+					}
 				}
 			}],
 			items: [scope.tree,scope.filefindPanel],

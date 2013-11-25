@@ -202,6 +202,8 @@ findCmd.prototype.exec = function(callback) {
 
 var find = function(req, res, next){
 	if ((req.query)&&(req.query.query)){
+		var start=(req.query.start)?req.query.start:0;
+		var limit=(req.query.limit)?req.query.limit:25
 		var findfile = createFind();
 		findfile.args('-P')
 		.args(res.locals.project.basePath)
@@ -211,13 +213,17 @@ var find = function(req, res, next){
 			var lines = out.split("\n");
 			var output = [];
 			for(var i in lines){
-				var item = {
-					shortfilename: path.basename(lines[i]),
-					longfilename: lines[i].substring(res.locals.project.basePath.length),
-					type: getType(path.basename(lines[i]))
-				}
-				output.push(item);
 				
+				if (i>=start){
+					if (output.length<limit){
+						var item = {
+							shortfilename: path.basename(lines[i]),
+							longfilename: lines[i].substring(res.locals.project.basePath.length),
+							type: getType(path.basename(lines[i]))
+						}
+						output.push(item);
+					}
+				}
 				
 			};
 			
