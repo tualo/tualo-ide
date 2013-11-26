@@ -65,10 +65,9 @@ html(lang="de")
 		link(rel='stylesheet', href='/codemirror/theme/elegant.css')
 		link(rel='stylesheet', href='/codemirror/theme/blackboard.css')
 
-		link(rel='stylesheet', href='/extjs/resources/ext-theme-neptune/ext-theme-neptune-all.css')
-
+		link(rel='stylesheet', href='/ext/resources/ext-theme-neptune/ext-theme-neptune-all.css')
 		link(rel='stylesheet', href='/ide/layout.css')
-		script(src='/extjs/ext-all.js')
+		script(src='/ext/ext-all.js')
 		-if (typeof locals.project!='undefined')
 			script(src='/ide/app.js')
 			script var projectID = "!{locals.project}"

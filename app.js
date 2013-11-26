@@ -8,7 +8,7 @@
 var express = require('express');
 var socketIO = require('socket.io');
 var SessionSockets = require('session.socket.io');
-
+var extjs = require('tualo-extjs');
 
 var routes = ['project','sign','ui','file','syntax','process','git'];
 
@@ -56,6 +56,7 @@ function initServer(){
 		app.use(express.urlencoded());
 		app.use(cookieParser);
 		app.use(sessionStore);
+		app.use(extjs.middleware);
 		app.use(express.static(path.join(__dirname, 'public')));
 		
 		
@@ -90,10 +91,11 @@ function initServer(){
 	app.set('io',io);
 	
 	
+	
 	for(var i in routes){
 		require('./routes/'+routes[i]).initRoute(app);
 	}
-	
+	//require('tualo-extjs').initRoute(app);
 	if (config.useHTTP){
 		httpServer.listen(httpPort, function(){
 			console.log("tualo - IDE - Server listening on port " + httpPort);

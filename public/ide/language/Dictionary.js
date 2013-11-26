@@ -48,7 +48,7 @@ Ext.define('Ext.tualo.ide.language.Dictionary', {
 	loaded: function(){
 		Ext.Loader.loadScript({
 			scope: this,
-			url: window.location.origin + '/extjs/locale/ext-lang-' +this.loadLanguage+'.js',
+			url: window.location.origin + '/ext/locale/ext-lang-' +this.loadLanguage+'.js',
 			onLoad: function(){
 				this.fireEvent('loaded',this);
 			},
