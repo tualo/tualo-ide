@@ -176,21 +176,18 @@ var delFolder = function(req, res, next) {
 
 var exec = require('child_process').exec;
 
-var createFind = function() {
-	return new findCmd();
-};
 
-var findCmd = function() {
+var Cmd = function(cmd) {
 	this.options = [];
-	this.command = 'find';
+	this.command = cmd;
 };
 
-findCmd.prototype.args = function(opt) {
+Cmd.prototype.args = function(opt) {
 	this.options.push(opt);
 	return this;
 }
 
-findCmd.prototype.exec = function(callback) {
+Cmd.prototype.exec = function(callback) {
 	var self = this;
 	var args = this.options.join(' ');
 	var child = exec(this.command + ' '+ args  + ' ', function(err, stdout, stderr) {
@@ -203,34 +200,78 @@ findCmd.prototype.exec = function(callback) {
 var find = function(req, res, next){
 	if ((req.query)&&(req.query.query)){
 		var start=(req.query.start)?req.query.start:0;
-		var limit=(req.query.limit)?req.query.limit:25
-		var findfile = createFind();
-		findfile.args('-P')
-		.args(res.locals.project.basePath)
-		.args('-name')
-		.args('"'+req.query.query+'"')
-		.exec(function(err,out,_e){
+		var limit=(req.query.limit)?req.query.limit:25;
+		
+		//fs.stat(file, function(err, stat) {
+		//		if (stat && stat.isDirectory()) {
+					
+		if (req.query.query.indexOf(':')>0){
+			var parts=req.query.query.split(':');
+			var txt = '';
+			for(var i=1;i<parts.length;i++){
+				if (txt!=''){
+					txt+=':';
+				}
+				txt+=parts[i];
+			}
+			var findfile = new Cmd('grep');
+			findfile.args('-R')
+			.args('--include')
+			.args('"'+parts[0]+'"')
+			.args('"'+txt+'"')
+			.args(res.locals.project.basePath)
+		}else{
+			var findfile = new Cmd('find');
+			findfile.args('-P')
+			.args(res.locals.project.basePath)
+			.args('-name')
+			.args('"'+req.query.query+'"');
+		}
+
+		findfile.exec(function(err,out,_e){
 			var lines = out.split("\n");
 			var output = [];
+			var hash = {};
 			for(var i in lines){
 				
-				if (i>=start){
-					if (output.length<limit){
-						var item = {
-							shortfilename: path.basename(lines[i]),
-							longfilename: lines[i].substring(res.locals.project.basePath.length),
-							type: getType(path.basename(lines[i]))
+				//if (i>=start){
+					//if (output.length<limit){
+						var p1 = lines[i].indexOf(':');
+						var fname='';
+						var hint = '';
+						if (p1>0){
+							fname = lines[i].substring(0,p1);
+							hint = lines[i].substring(p1+1);
+						}else{
+							fname = lines[i];
+							hint = '';
 						}
-						output.push(item);
+						if (typeof hash[fname]=='undefined'){
+							var item = {
+								shortfilename: path.basename(fname),
+								longfilename: fname.substring(res.locals.project.basePath.length),
+								type: getType(path.basename(fname)),
+								hint: hint
+							}
+							output.push(item);
+							hash[fname]=true;
+						}
+						//}
+					//}
+			}
+			var list = [];
+			for(var i in output){
+				if (i>=start){
+					if (list.length<limit){
+						list.push(output[i]);
 					}
 				}
-				
-			};
+			}
 			
 			res.json(200,{
 				success: true,
-				totalCount:lines.length,
-				data: output
+				totalCount:output.length,
+				data: list
 			});
 		})
 	}else{

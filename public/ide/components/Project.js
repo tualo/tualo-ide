@@ -251,7 +251,8 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			fields: [
 				{name: 'shortfilename'},
 				{name: 'longfilename'},
-				{name: 'type'}
+				{name: 'type'},
+				{name: 'hint'}
 			]
 		});
 		
@@ -280,7 +281,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		
 		var resultTpl = Ext.create('Ext.XTemplate',
 			'<tpl for=".">',
-			'<div class="search-item">','<h3>{shortfilename}</h3>','{longfilename}',
+			'<div class="search-item">','<h3>{shortfilename}</h3>','{longfilename}','{hint}',
 			'</div></tpl>',
 			{
 				formatDate: function(value){
