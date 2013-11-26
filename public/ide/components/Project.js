@@ -224,6 +224,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 		
 		
 		if (typeof scope.projectConfig.process!=='undefined'){
+			scope.hideSouth=false;
 			// show process btn only if there is a commend defined
 			buttons.push({
 				text: scope.dictionary.get('buttonProcess'),
@@ -237,6 +238,8 @@ Ext.define('Ext.tualo.ide.components.Project', {
 					processPanel.startProcess();
 				}
 			});
+		}else{
+			scope.hideSouth = true;
 		}
 		
 		scope.toolbar = Ext.create('Ext.toolbar.Toolbar', {
@@ -417,6 +420,7 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			split: true,
 			region: 'south',
 			height: 200,
+			hidden: scope.hideSouth,
 			projectID: scope.projectID,
 			projectTitle: scope.projectTitle,
 			projectConfig: scope.projectConfig,
