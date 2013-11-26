@@ -271,18 +271,15 @@ Ext.define('Ext.tualo.ide.components.Project', {
 			listeners: {
 				beforeload: function(){
 					
-					
+					scope.treeWrapper.getLayout().setActiveItem(scope.filefindPanel);
 				},
 				load: function(){
-					scope.treeWrapper.getLayout().setActiveItem(scope.filefindPanel);
+					
 				}
 			}
 		});
 		
-		var resultTpl = Ext.create('Ext.XTemplate',
-			'<tpl for=".">',
-			'<div class="search-item">','<h3>{shortfilename}</h3>','{longfilename}','{hint}',
-			'</div></tpl>',
+		var resultTpl = Ext.create('Ext.XTemplate','<tpl for=".">','<div class="search-item">','<h3>{shortfilename}</h3>','{longfilename}','<br/><span style="font-size:0.8em;">{hint}</span>','</div></tpl>',
 			{
 				formatDate: function(value){
 					return Ext.Date.format(value, 'M j, Y');
