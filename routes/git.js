@@ -141,13 +141,19 @@ var rm = function(req, res, next) {
 var commit = function(req, res, next) {
 	var fileID = req.body.file;
 	
-	var fileList = fileID.split(' ');
+	var fileList = fileID.replace(/\-\>/g,'').split(' ');
+	var leading_slash = /^\//;
 	var files = '';
 	for(var i in fileList){
-		if (files!=''){
+		if (files!==''){
 			files+=' ';
 		}
-		files += '.'+fileList[i]; 
+		if (fileList[i]!==''){
+			if (!leading_slash.test(fileList[i])){
+				fileList[i]=path.sep+fileList[i];
+			}
+			files += '.'+fileList[i]; 
+		}
 	}
 	
 	var message = req.body.message.replace(/\n/gm,' ').replace(/"/g,'*');
@@ -158,7 +164,12 @@ var commit = function(req, res, next) {
 	},function(err,stdout,stderr){
 		res.json(200,{
 			success: true,
-			file: req.body.file
+			file: req.body.file,
+			fileList: fileList,
+			command: command,
+			err: err,
+			stdout: stdout.toString(),
+			stderr: stderr.toString()
 		});
 	})
 }
