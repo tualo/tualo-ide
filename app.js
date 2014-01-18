@@ -9,8 +9,7 @@ var express = require('express');
 var socketIO = require('socket.io');
 var SessionSockets = require('session.socket.io');
 var extjs = require('tualo-extjs');
-//var extjs = require('tualo-extjs-codemirror');
-
+var codemirror = require('tualo-extjs-codemirror');
 var routes = ['project','sign','ui','file','syntax','process','git'];
 
 
@@ -58,7 +57,8 @@ function initServer(){
 		app.use(cookieParser);
 		app.use(sessionStore);
 		app.use(extjs.middleware);
-		app.use(express.static(path.join(__dirname, 'public')));
+		app.use(codemirror.middleware);
+
 		
 		
 		

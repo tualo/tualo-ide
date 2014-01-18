@@ -3,7 +3,7 @@
 	"description": "IDE written in JavaScript",
 	"homepage": "http://tualo.de",
 	"main": "app.js",
-	"version": "0.0.13",
+	"version": "0.0.14",
 	"engines": {
 		"node": ">=0.8.0"
 	},
@@ -46,6 +46,7 @@
 		"path-extra": ">=0.1.0",
 		"forever": ">=0.10.9",
 		"session.socket.io": ">=0.1.6",
-		"tualo-extjs": ">=4.2.1"
+		"tualo-extjs": ">=4.2.1",
+		"tualo-extjs-codemirror": "3.21.1"
 	}
 }
