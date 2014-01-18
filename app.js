@@ -9,6 +9,7 @@ var express = require('express');
 var socketIO = require('socket.io');
 var SessionSockets = require('session.socket.io');
 var extjs = require('tualo-extjs');
+//var extjs = require('tualo-extjs-codemirror');
 
 var routes = ['project','sign','ui','file','syntax','process','git'];
 
