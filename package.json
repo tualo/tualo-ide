@@ -47,6 +47,6 @@
 		"forever": ">=0.10.9",
 		"session.socket.io": ">=0.1.6",
 		"tualo-extjs": ">=4.2.1",
-		"tualo-extjs-codemirror": "3.21.1"
+		"tualo-extjs-codemirror": "3.21.2"
 	}
 }
