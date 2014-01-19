@@ -56,11 +56,17 @@ function initServer(){
 		app.use(express.urlencoded());
 		app.use(cookieParser);
 		app.use(sessionStore);
+		
+		
 		app.use(extjs.middleware);
+		
+		app.set('codemirror stylesheets',codemirror.stylesheet);
+		app.set('codemirror javascripts',codemirror.javascript);
+		
 		app.use(codemirror.middleware);
 
 		
-		
+		app.use(express.static('public'));
 		
 	});
 	app.set('startDirectory',__dirname); // make the baseDir accessible the project-route(s)
@@ -94,7 +100,13 @@ function initServer(){
 	
 	
 	for(var i in routes){
+      	mod = require('./routes/'+routes[i]);
+      if (typeof mod.initRoute==='function'){
 		require('./routes/'+routes[i]).initRoute(app);
+      }
+      if (typeof mod.initSocketIO==='function'){
+		require('./routes/'+routes[i]).initSocketIO(app);
+      }
 	}
 	//require('tualo-extjs').initRoute(app);
 	if (config.useHTTP){
@@ -111,13 +123,13 @@ function initServer(){
 }
 
 function findConfiguration(){
-	fs.exists(path.join('/etc','tualo-ide','config.json'),function(exists){
+	fs.exists(path.join(path.sep,'etc','tualo-ide','config.json'),function(exists){
 		if (exists){
 			try{
-				config = require(path.join('/etc','tualo-ide','config.json'));
+				config = require(path.join(path.sep,'etc','tualo-ide','config.json'));
 				initServer();
 			}catch(e){
-				logger.log('error','The configuration is invalid *1. '+e.Error);
+				logger.log('error','The configuration is invalid *1. '+e);
 			}
 		}else{
 			fs.exists(path.join(__dirname,'config','config.json'),function(exists){

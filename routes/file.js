@@ -349,6 +349,9 @@ var getType = function(filename,callback){
 	var fileParts = filename.split('.');
 	var lastPart = fileParts[fileParts.length-1];
 	switch(lastPart){
+		case 'json':
+			type = 'json';
+			break;
 		case 'js':
 			type = 'javascript';
 			break;
