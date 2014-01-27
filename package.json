@@ -1,52 +1,63 @@
 {
-	"name": "tualo-ide",
-	"description": "IDE written in JavaScript",
-	"homepage": "http://tualo.de",
-	"main": "app.js",
-	"version": "0.0.14",
-	"engines": {
-		"node": ">=0.8.0"
-	},
-	"keywords":[
-		"ide",
-		"development"
-	],
-	"author": [
-		{
-			"name": "Thomas Hoffmann",
-			"email": "thomas.hoffmann@tualo.de",
-			"url": "http://tualo.de/"
-		}
-	],
-	"maintainers": [
-		{
-			"name": "Thomas Hoffmann",
-			"email": "thomas.hoffmann@tualo.de",
-			"url": "http://tualo.de/"
-		}
-	],
-	"bin": {
-		"tualo-ide": "./bin/tualo-ide"
-	},
-	"license" :[
-		{ "type" : "GPLv3", "url" : "https://github.com/tualo/tualo-ide/blob/master/LICENSE"}
-	],
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/tualo/tualo-ide.git"
-	},
-	"readmeFilename": "README.md",
-	"dependencies": {
-		"express": ">=3.1.1",
-		"jade": ">=0.28.2",
-		"diff": ">=1.0.4",
-		"uglify-js": ">=2.2.5",
-		"socket.io": ">=0.9.14",
-		"socket.io-client": ">=0.9.11",
-		"path-extra": ">=0.1.0",
-		"forever": ">=0.10.9",
-		"session.socket.io": ">=0.1.6",
-		"tualo-extjs": ">=4.2.1",
-		"tualo-extjs-codemirror": "3.21.2"
-	}
+  "name": "tualo-ide",
+  "description": "IDE written in JavaScript",
+  "homepage": "http://tualo.de",
+  "main": "app.js",
+  "version": "0.0.14",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "keywords": [
+    "ide",
+    "development"
+  ],
+  "author": [
+    {
+      "name": "Thomas Hoffmann",
+      "email": "thomas.hoffmann@tualo.de",
+      "url": "http://tualo.de/"
+    }
+  ],
+  "maintainers": [
+    {
+      "name": "Thomas Hoffmann",
+      "email": "thomas.hoffmann@tualo.de",
+      "url": "http://tualo.de/"
+    }
+  ],
+  "bin": {
+    "tualo-ide": "./bin/tualo-ide"
+  },
+  "license": [
+    {
+      "type": "GPLv3",
+      "url": "https://github.com/tualo/tualo-ide/blob/master/LICENSE"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tualo/tualo-ide.git"
+  },
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "express": ">=3.1.1",
+    "jade": ">=0.28.2",
+    "diff": ">=1.0.4",
+    "uglify-js": ">=2.2.5",
+    "socket.io": ">=0.9.14",
+    "socket.io-client": ">=0.9.11",
+    "path-extra": ">=0.1.0",
+    "forever": ">=0.10.9",
+    "session.socket.io": ">=0.1.6",
+    "tualo-extjs": ">=4.2.1",
+    "tualo-extjs-codemirror": "3.21.2"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.2",
+    "grunt-contrib-jshint": "~0.6.3",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2",
+    "grunt-node-webkit-builder": "~0.1.16",
+    "grunt-contrib-copy": "~0.5.0"
+  }
 }

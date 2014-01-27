@@ -5,3 +5,16 @@
 routes/to_ignore.js
 /public/codemirror.old
 /qtapp
+/webkitbuilds
+/nodewebkit/
+/nodewebkit/bin
+/nodewebkit/config
+/nodewebkit/icons
+/nodewebkit/lib
+/nodewebkit/node_modules
+/nodewebkit/public
+/nodewebkit/routes
+/nodewebkit/views
+/nodewebkit/app.js
+/nodewebkit/README.md
+/nodewebkit/LICENSE

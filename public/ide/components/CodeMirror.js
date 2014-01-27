@@ -14,6 +14,7 @@ Ext.define('Ext.tualo.ide.components.CodeMirror', {
         this.on('render',this._renderMe);
 
         // set up the keymap 
+        
         CodeMirror.keyMap[this.editorID] =  {
             'Cmd-S': this.save.bind(this),
             'Ctrl-S': this.save.bind(this),
@@ -21,6 +22,7 @@ Ext.define('Ext.tualo.ide.components.CodeMirror', {
             'Tab': this.tab.bind(this),
             'fallthrough': ['default']
         };
+        
 
         this.callParent(arguments);
 
